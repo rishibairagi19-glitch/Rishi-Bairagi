@@ -136,6 +136,16 @@
   .term-input:focus{ outline: none; border-color: rgba(72,214,255,0.55); box-shadow: 0 0 0 3px rgba(72,214,255,0.12); }
   .term-input::placeholder{ color: #5b6478; }
 
+  /* Browser autofill custom style override */
+  .term-input:-webkit-autofill,
+  .term-input:-webkit-autofill:hover, 
+  .term-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--text) !important;
+    -webkit-box-shadow: 0 0 0px 1000px #0b1020 inset !important;
+    box-shadow: 0 0 0px 1000px #0b1020 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
   a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
     outline: 2px solid var(--cyan); outline-offset: 3px;
   }
@@ -681,7 +691,7 @@ if (form && submitBtn) {
         name: name,
         email: email,
         message: message,
-        _subject: 'New Portfolio Message from ' + name
+              _subject: "[Rishi Portfolio] New Message from " + name
       })
     })
     .then(response => response.json())
