@@ -573,8 +573,7 @@
             <p id="form-status" class="text-xs font-mono text-[var(--muted)]"></p>
           </div>
           <p class="mt-4 text-xs text-[var(--muted)] leading-relaxed">
-            Sending opens your device's email app with the message pre-filled — hit send there and it
-            lands straight in <span class="font-mono">rishibairagi19@gmail.com</span>.
+            Your message will be sent directly to <span class="font-mono text-[var(--cyan)]">rishibairagi19@gmail.com</span> without opening any external email client.
           </p>
         </form>
       </div>
@@ -644,21 +643,73 @@ const skillIo = new IntersectionObserver((entries) => {
 skillRows.forEach(row => skillIo.observe(row));
 
 // ---------- Contact form (mailto handoff, no backend required) ----------
+// ---------- Contact form (Direct Email via FormSubmit API) ----------
+// ---------- Contact form (Direct Email via FormSubmit API with Logs) ----------
 const form = document.getElementById('contact-form');
 const status = document.getElementById('form-status');
-form.addEventListener('submit', function (e) {
-  e.preventDefault();
-  const name = document.getElementById('name').value.trim();
-  const email = document.getElementById('email').value.trim();
-  const message = document.getElementById('message').value.trim();
+const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
 
-  const subject = encodeURIComponent('Portfolio inquiry from ' + name);
-  const body = encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')');
-  window.location.href = `mailto:rishibairagi19@gmail.com?subject=${subject}&body=${body}`;
+if (form && submitBtn) {
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    
+    const nameEl = document.getElementById('name');
+    const emailEl = document.getElementById('email');
+    const messageEl = document.getElementById('message');
+    
+    if (!nameEl || !emailEl || !messageEl) {
+      alert("Error: Form inputs are missing in HTML!");
+      return;
+    }
 
-  status.textContent = 'Opening your email client…';
-  setTimeout(() => { status.textContent = ''; }, 4000);
-});
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim();
+    const message = messageEl.value.trim();
+
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.7';
+    status.textContent = 'Sending message...';
+    status.style.color = 'var(--cyan)';
+
+    fetch('https://formsubmit.co/ajax/rishibairagi19@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        message: message,
+        _subject: 'New Portfolio Message from ' + name
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success === "true" || data.success === true) {
+        status.textContent = '✓ Message sent successfully!';
+        status.style.color = '#28c840';
+        form.reset();
+      } else {
+        status.style.color = '#ff5f57';
+        status.textContent = '✗ ' + (data.message || 'Error sending message. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Fetch Error:', error);
+      status.textContent = '✗ Local file error. Use a web server!';
+      status.style.color = '#ff5f57';
+      alert("🚨 एरर: आप फाइल को सीधा डबल-क्लिक करके चला रहे हैं! कृपया VS Code में 'Go Live' दबाकर या python app.py रन करके http://localhost:8000 पर इसे खोलें।");
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      setTimeout(() => { status.textContent = ''; }, 6000);
+    });
+  });
+} else {
+  console.error("Form or Submit Button not found in HTML!");
+}
 
 // ---------- Project card 3D tilt ----------
 document.querySelectorAll('.tilt-card').forEach(card => {
@@ -718,34 +769,46 @@ document.querySelectorAll('.tilt-card').forEach(card => {
   const particles = new THREE.Points(particleGeo, particleMat);
   scene.add(particles);
 
-  // Connective line network (rebuilt each frame from nearby pairs)
+  // Connective line network (optimized with a single pre-allocated BufferGeometry to avoid GC churn)
+  const MAX_LINES = PARTICLE_COUNT * 4; 
+  const linePositions = new Float32Array(MAX_LINES * 2 * 3); 
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+
   const lineMat = new THREE.LineBasicMaterial({ color: 0x9a6bff, transparent: true, opacity: 0.18 });
-  let lineSegments = new THREE.LineSegments(new THREE.BufferGeometry(), lineMat);
+  const lineSegments = new THREE.LineSegments(lineGeo, lineMat);
   scene.add(lineSegments);
 
   const MAX_DIST = 16;
 
   function rebuildLines() {
     const pos = particleGeo.attributes.position.array;
-    const linePositions = [];
+    let vertexIdx = 0;
+
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       for (let j = i + 1; j < PARTICLE_COUNT; j++) {
+        if (vertexIdx >= MAX_LINES * 2) break;
+
         const dx = pos[i * 3] - pos[j * 3];
         const dy = pos[i * 3 + 1] - pos[j * 3 + 1];
         const dz = pos[i * 3 + 2] - pos[j * 3 + 2];
         const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
         if (dist < MAX_DIST) {
-          linePositions.push(pos[i*3], pos[i*3+1], pos[i*3+2], pos[j*3], pos[j*3+1], pos[j*3+2]);
+          linePositions[vertexIdx * 3] = pos[i * 3];
+          linePositions[vertexIdx * 3 + 1] = pos[i * 3 + 1];
+          linePositions[vertexIdx * 3 + 2] = pos[i * 3 + 2];
+          vertexIdx++;
+
+          linePositions[vertexIdx * 3] = pos[j * 3];
+          linePositions[vertexIdx * 3 + 1] = pos[j * 3 + 1];
+          linePositions[vertexIdx * 3 + 2] = pos[j * 3 + 2];
+          vertexIdx++;
         }
       }
     }
-    scene.remove(lineSegments);
-    lineSegments.geometry.dispose();
-    lineSegments = new THREE.LineSegments(
-      new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3)),
-      lineMat
-    );
-    scene.add(lineSegments);
+    lineGeo.attributes.position.needsUpdate = true;
+    lineGeo.setDrawRange(0, vertexIdx);
   }
 
   // Mouse interaction: parallax rotation + camera drift, so the whole scene
