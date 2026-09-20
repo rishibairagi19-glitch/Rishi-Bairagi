@@ -59,8 +59,7 @@
 
   /* Custom cursor */
   @media (hover:hover) and (pointer:fine){
-    body{ cursor:none; }
-    a, button, .cursor-hover{ cursor:none; }
+    html.has-custom-cursor, html.has-custom-cursor body, html.has-custom-cursor a, html.has-custom-cursor button, html.has-custom-cursor .cursor-hover { cursor: none !important; }
   }
   #cursor-dot, #cursor-ring{
     position:fixed; top:0; left:0; pointer-events:none; z-index:9999;
@@ -345,14 +344,12 @@
     <div class="max-w-6xl mx-auto grid md:grid-cols-12 gap-10">
       <div class="md:col-span-7 reveal">
         <h2 class="font-display text-3xl md:text-4xl font-medium leading-snug">
-          I like the parts of engineering most people skip — the data model, the edge case,
-          the moment an interface finally feels obvious.
+          <span class="lang-en">I like the parts of engineering most people skip — the data model, the edge case, the moment an interface finally feels obvious.</span>
+          <span class="lang-hi">मुझे इंजीनियरिंग के वे हिस्से सबसे ज्यादा पसंद हैं जिन्हें लोग छोड़ देते हैं — डेटा मॉडल, कठिन परिस्थितियां (edge cases), और वह क्षण जब कोई इंटरफ़ेस उपयोग करने में बेहद आसान लगने लगता है।</span>
         </h2>
         <p class="text-slate-400 mt-6 leading-relaxed max-w-lg">
-          My work sits across the stack: I've shipped finance tools, multi-role vendor platforms,
-          page builders and institutional web platforms. I pick the right language for the job rather
-          than forcing one everywhere, and I care about the small decisions — naming, structure, load
-          time — that decide whether software feels solid or fragile.
+          <span class="lang-en">My work sits across the stack: I've shipped finance tools, multi-role vendor platforms, page builders and institutional web platforms. I pick the right language for the job rather than forcing one everywhere, and I care about the small decisions — naming, structure, load time — that decide whether software feels solid or fragile.</span>
+          <span class="lang-hi">मेरा काम पूरे स्टैक (stack) में फैला है: मैंने फाइनेंस टूल्स, मल्टी-रोल वेंडर प्लेटफॉर्म, पेज बिल्डर्स और संस्थागत वेब प्लेटफॉर्म डिलीवर किए हैं। मैं हर जगह एक ही तकनीक थोपने के बजाय काम के लिए सही भाषा चुनता हूँ, और मैं नामकरण, संरचना, और लोड समय जैसे छोटे-छोटे निर्णयों पर पूरा ध्यान देता हूँ जो सॉफ्टवेयर को मजबूत या कमजोर बनाते हैं।</span>
         </p>
       </div>
       <div class="md:col-span-5 reveal flex flex-col gap-6">
@@ -372,7 +369,7 @@
           <dl class="space-y-5">
             <div class="flex justify-between border-b border-white/5 pb-4">
               <dt class="text-slate-400">core.languages</dt>
-              <dd class="text-ink">HTML · JavaScript · Python</dd>
+              <dd class="text-ink">HTML • JS • Python</dd>
             </div>
             <div class="flex justify-between border-b border-white/5 pb-4">
               <dt class="text-slate-400">also.fluent_in</dt>
@@ -398,36 +395,48 @@
   <section id="services" class="px-6 md:px-10 py-28 md:py-36">
     <div class="max-w-6xl mx-auto">
       <div class="reveal mb-16 max-w-lg">
-        <h2 class="font-display text-3xl md:text-4xl font-medium">What I build for clients</h2>
+        <h2 class="font-display text-3xl md:text-4xl font-medium">
+          <span class="lang-en">What I build for clients</span>
+          <span class="lang-hi">मैं क्लाइंट्स के लिए क्या बनाता हूँ</span>
+        </h2>
         <p class="text-slate-400 mt-4 leading-relaxed">
-          Freelance work, start to finish — from a first sketch of an idea to a product people
-          actually use.
+          <span class="lang-en">Freelance work, start to finish — from a first sketch of an idea to a product people actually use.</span>
+          <span class="lang-hi">फ्रीलांस काम, शुरू से अंत तक — आपके विचार के पहले खाके से लेकर एक ऐसे उत्पाद तक जिसका लोग वास्तव में उपयोग करते हैं।</span>
         </p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-px bg-white/5 reveal">
         <div class="bg-void p-8 md:p-10">
           <span class="mono text-xs text-cyan">01</span>
-          <h3 class="font-display text-xl mt-4 mb-3">Custom web design</h3>
+          <h3 class="font-display text-xl mt-4 mb-3">
+            <span class="lang-en">Custom web design</span>
+            <span class="lang-hi">कस्टम वेब डिज़ाइन</span>
+          </h3>
           <p class="text-slate-400 text-sm leading-relaxed">
-            Pages and sites built around your business, not a template — clean structure,
-            fast load times, and a look that's yours alone.
+            <span class="lang-en">Pages and sites built around your business, not a template — clean structure, fast load times, and a look that's yours alone.</span>
+            <span class="lang-hi">आपके व्यवसाय के आधार पर बनाई गई साइट्स, न कि किसी रेडीमेड टेम्पलेट पर — साफ़ संरचना, तेज़ लोड समय, और एक ऐसा रूप जो केवल आपका हो।</span>
           </p>
         </div>
         <div class="bg-void p-8 md:p-10">
           <span class="mono text-xs text-cyan">02</span>
-          <h3 class="font-display text-xl mt-4 mb-3">Application development</h3>
+          <h3 class="font-display text-xl mt-4 mb-3">
+            <span class="lang-en">Application development</span>
+            <span class="lang-hi">एप्लीकेशन डेवलपमेंट</span>
+          </h3>
           <p class="text-slate-400 text-sm leading-relaxed">
-            Multi-user platforms with real logins, dashboards and billing logic — the kind
-            of application a growing business runs on daily.
+            <span class="lang-en">Multi-user platforms with real logins, dashboards and billing logic — the kind of application a growing business runs on daily.</span>
+            <span class="lang-hi">असली लॉगिन, डैशबोर्ड और बिलिंग लॉजिक के साथ मल्टी-यूज़र प्लेटफ़ॉर्म — ऐसा एप्लीकेशन जिससे एक बढ़ता हुआ व्यवसाय आसानी से चल सके।</span>
           </p>
         </div>
         <div class="bg-void p-8 md:p-10">
           <span class="mono text-xs text-cyan">03</span>
-          <h3 class="font-display text-xl mt-4 mb-3">Tailored software solutions</h3>
+          <h3 class="font-display text-xl mt-4 mb-3">
+            <span class="lang-en">Tailored software solutions</span>
+            <span class="lang-hi">अनुकूलित सॉफ्टवेयर समाधान</span>
+          </h3>
           <p class="text-slate-400 text-sm leading-relaxed">
-            When nothing off the shelf fits, I design the system around your exact
-            workflow instead of bending your workflow to fit software.
+            <span class="lang-en">When nothing off the shelf fits, I design the system around your exact workflow instead of bending your workflow to fit software.</span>
+            <span class="lang-hi">जब कोई रेडीमेड सॉफ्टवेयर काम न आए, तो मैं आपके काम के तरीके को सॉफ्टवेयर के अनुकूल मोड़ने के बजाय आपके पूरे सिस्टम को आपके काम के अनुसार डिज़ाइन करता हूँ।</span>
           </p>
         </div>
       </div>
@@ -438,7 +447,10 @@
   <section id="work" class="px-6 md:px-10 py-28 md:py-36">
     <div class="max-w-6xl mx-auto">
       <div class="reveal mb-16 flex items-end justify-between flex-wrap gap-4">
-        <h2 class="font-display text-3xl md:text-4xl font-medium">Selected work</h2>
+        <h2 class="font-display text-3xl md:text-4xl font-medium">
+          <span class="lang-en">Selected work</span>
+          <span class="lang-hi">चुनिंदा काम</span>
+        </h2>
         <a href="https://github.com/rishibairagi19-glitch" target="_blank" rel="noopener" class="mono text-sm text-slate-400 hover:text-cyan transition-colors cursor-hover">github.com/rishibairagi19-glitch</a>
       </div>
 
@@ -451,12 +463,13 @@
           </div>
           <div class="md:col-span-7 p-8 md:p-10 flex flex-col justify-center">
             <span class="mono text-xs text-cyan mb-3">personal finance · web app</span>
-            <h3 class="font-display text-2xl md:text-[28px] mb-3">Accountancy App</h3>
+            <h3 class="font-display text-2xl md:text-[28px] mb-3">
+              <span class="lang-en">Accountancy App</span>
+              <span class="lang-hi">अकाउंटेंसी ऐप</span>
+            </h3>
             <p class="text-slate-400 leading-relaxed text-sm max-w-md">
-              An advanced financial management platform for personal account tracking —
-              built to handle day-to-day bookkeeping the way a small business would use
-              Tally, with modern features layered on top: running ledgers, categorised
-              entries and a clear view of where money moves.
+              <span class="lang-en">An advanced financial management platform for personal account tracking — built to handle day-to-day bookkeeping the way a small business would use Tally, with modern features layered on top: running ledgers, categorised entries and a clear view of where money moves.</span>
+              <span class="lang-hi">व्यक्तिगत खाता ट्रैकिंग के लिए एक उन्नत वित्तीय प्रबंधन मंच — बहीखाता को उसी तरह से संभालने के लिए बनाया गया है जैसे कोई छोटा व्यवसाय Tally का उपयोग करेगा, जिसमें आधुनिक फीचर्स जोड़े गए हैं: रनिंग लेज़र, वर्गीकृत प्रविष्टियाँ और कैश फ्लो का स्पष्ट दृश्य।</span>
             </p>
           </div>
         </article>
@@ -465,11 +478,13 @@
         <article class="reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12">
           <div class="md:col-span-7 p-8 md:p-10 flex flex-col justify-center order-2 md:order-1">
             <span class="mono text-xs text-cyan mb-3">no-code publishing · QR commerce</span>
-            <h3 class="font-display text-2xl md:text-[28px] mb-3">Market Space</h3>
+            <h3 class="font-display text-2xl md:text-[28px] mb-3">
+              <span class="lang-en">Market Space</span>
+              <span class="lang-hi">मार्केट स्पेस</span>
+            </h3>
             <p class="text-slate-400 leading-relaxed text-sm max-w-md">
-              A web page creation platform: sign in and generate a professional storefront
-              page in minutes. Customers reach the shop directly through a QR code —
-              no app to install, no friction between a scan and a sale.
+              <span class="lang-en">A web page creation platform: sign in and generate a professional storefront page in minutes. Customers reach the shop directly through a QR code — no app to install, no friction between a scan and a sale.</span>
+              <span class="lang-hi">एक वेब पेज निर्माण मंच: साइन इन करें और मिनटों में एक पेशेवर स्टोरफ्रंट पेज बनाएं। ग्राहक सीधे एक क्यूआर कोड के माध्यम से दुकान तक पहुंचते हैं — कोई ऐप इंस्टॉल करने की आवश्यकता नहीं, केवल स्कैन और सेल।</span>
             </p>
           </div>
           <div class="thumb thumb-market md:col-span-5 min-h-[220px] flex items-center justify-center order-1 md:order-2">
@@ -492,12 +507,13 @@
           </div>
           <div class="md:col-span-7 p-8 md:p-10 flex flex-col justify-center">
             <span class="mono text-xs text-cyan mb-3">multi-login platform · billing</span>
-            <h3 class="font-display text-2xl md:text-[28px] mb-3">My Vendor App</h3>
+            <h3 class="font-display text-2xl md:text-[28px] mb-3">
+              <span class="lang-en">My Vendor App</span>
+              <span class="lang-hi">माय वेंडर ऐप</span>
+            </h3>
             <p class="text-slate-400 leading-relaxed text-sm max-w-md">
-              A three-sided platform for recurring-delivery businesses — think milk or
-              water vendors — with separate logins for Owner, Vendor and Customer.
-              Handles monthly billing and delivery tracking, while customers check
-              their bill, payment history and dues without a phone call.
+              <span class="lang-en">A three-sided platform for recurring-delivery businesses — think milk or water vendors — with separate logins for Owner, Vendor and Customer. Handles monthly billing and delivery tracking, while customers check their bill, payment history and dues without a phone call.</span>
+              <span class="lang-hi">आवर्ती-वितरण (recurring-delivery) व्यवसायों के लिए एक त्रि-पक्षीय मंच — जैसे दूध या पानी के विक्रेता — जिसमें ओनर, वेंडर और कस्टमर के लिए अलग लॉगिन हैं। मासिक बिलिंग और डिलीवरी को संभालता है, जबकि ग्राहक बिना किसी फोन कॉल के अपना बिल, भुगतान इतिहास और बकाया राशि देख सकते हैं।</span>
             </p>
           </div>
         </article>
@@ -506,11 +522,13 @@
         <article class="reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12">
           <div class="md:col-span-7 p-8 md:p-10 flex flex-col justify-center order-2 md:order-1">
             <span class="mono text-xs text-cyan mb-3">institutional website</span>
-            <h3 class="font-display text-2xl md:text-[28px] mb-3">Diet Mandsaur Web Platform</h3>
+            <h3 class="font-display text-2xl md:text-[28px] mb-3">
+              <span class="lang-en">Diet Mandsaur Web Platform</span>
+              <span class="lang-hi">डाइट मंदसौर वेब प्लेटफॉर्म</span>
+            </h3>
             <p class="text-slate-400 leading-relaxed text-sm max-w-md">
-              The official web platform for Diet College — campus activities, principal
-              and faculty information, and the college's ongoing online presence, all
-              maintained as active, up-to-date content rather than a static brochure.
+              <span class="lang-en">The official web platform for Diet College — campus activities, principal and faculty information, and the college's ongoing online presence, all maintained as active, up-to-date content rather than a static brochure.</span>
+              <span class="lang-hi">डाइट कॉलेज के लिए आधिकारिक वेब प्लेटफॉर्म — कैंपस की गतिविधियाँ, प्रिंसिपल और फैकल्टी की जानकारी, और कॉलेज की ऑनलाइन उपस्थिति, जिसे केवल एक स्टेटिक ब्रोशर के बजाय सक्रिय, अद्यतित (up-to-date) सामग्री के रूप में रखा गया है।</span>
             </p>
           </div>
           <div class="thumb thumb-diet md:col-span-5 min-h-[220px] flex items-center justify-center order-1 md:order-2">
@@ -614,7 +632,8 @@
   <footer class="px-6 md:px-10 py-10 border-t border-white/5">
     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 mono text-xs text-slate-500">
       <span>Rishi Bairagi — Software Engineer</span>
-      <span>&copy; 2026, built from scratch</span>
+      <span>&copy; 2026, 
+        <span class="lang-en">built from scratch</span><span class="lang-hi">शुरू से निर्मित</span></span>
     </div>
   </footer>
 
@@ -668,9 +687,19 @@
   "use strict";
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Setup Theme and Lang instantly from storage
-  var currentTheme = localStorage.getItem('sara_theme') || 'dark';
-  var currentLang = localStorage.getItem('sara_lang') || 'en';
+  // Safe localStorage wrapper to prevent SecurityError when running locally (file://) or in iframe
+  var storage = {
+    getItem: function(key) {
+      try { return localStorage.getItem(key); } catch(e) { return null; }
+    },
+    setItem: function(key, val) {
+      try { localStorage.setItem(key, val); } catch(e) {}
+    }
+  };
+
+  // Setup Theme and Lang instantly from safe storage
+  var currentTheme = storage.getItem('sara_theme') || 'dark';
+  var currentLang = storage.getItem('sara_lang') || 'en';
   
   if (currentTheme === 'light') {
     document.documentElement.classList.add('light-theme');
@@ -682,6 +711,10 @@
     var dot = document.getElementById('cursor-dot');
     var ring = document.getElementById('cursor-ring');
     if (window.matchMedia('(hover:hover) and (pointer:fine)').matches === false) return;
+    
+    // Safe hide: Only hide native cursor if JS custom cursor successfully initializes
+    document.documentElement.classList.add('has-custom-cursor');
+
     var mx=0,my=0, rx=0, ry=0;
     window.addEventListener('mousemove', function(e){
       mx = e.clientX; my = e.clientY;
@@ -695,7 +728,7 @@
     loop();
     // Event Delegation: This ensures custom cursor reacts to dynamically added elements (like Sara's suggestion chips)
     document.addEventListener('mouseover', function(e){
-      if (e.target.closest('a, button, .cursor-hover, .project-card')) {
+      if (e.target && e.target.closest && e.target.closest('a, button, .cursor-hover, .project-card')) {
         ring.classList.add('is-active');
       } else {
         ring.classList.remove('is-active');
@@ -954,10 +987,10 @@
     }
 
     // Smart Name Memory Detection
-    var nameMatch = raw.match(/(?:my name is|mera naam|i am|main hoon|मेरा नाम)\s+([a-zA-Zहिन्दी-9]+)/i);
+    var nameMatch = raw.match(/(?:my name is|mera naam|i am|main hoon|मेरा नाम)\s+([a-zA-Z0-9\u0900-\u097F]+)/i);
     if (nameMatch && nameMatch[1]) {
       var name = nameMatch[1].trim();
-      localStorage.setItem('sara_user_name', name);
+      storage.setItem('sara_user_name', name);
       return activeLang === 'hi'
         ? "नमस्ते " + name + "! आपसे मिलकर बहुत खुशी हुई। बताइए, मैं आपकी क्या सेवा करूँ?"
         : "Nice to meet you, " + name + "! How can I help you today?";
@@ -986,7 +1019,7 @@
       }
     }
 
-    var nameSaved = localStorage.getItem('sara_user_name');
+    var nameSaved = storage.getItem('sara_user_name');
     var prefix = nameSaved ? nameSaved + ", " : "";
 
     if (maxScore > 0 && bestRule) {
@@ -1210,7 +1243,7 @@
     langBtn.addEventListener('click', function() {
       currentLang = currentLang === 'en' ? 'hi' : 'en';
       document.documentElement.setAttribute('lang', currentLang);
-      localStorage.setItem('sara_lang', currentLang);
+      storage.setItem('sara_lang', currentLang);
       langBtn.textContent = currentLang.toUpperCase();
       renderSuggestions();
     });
@@ -1220,10 +1253,10 @@
     themeBtn.addEventListener('click', function() {
       if (document.documentElement.classList.contains('light-theme')) {
         document.documentElement.classList.remove('light-theme');
-        localStorage.setItem('sara_theme', 'dark');
+        storage.setItem('sara_theme', 'dark');
       } else {
         document.documentElement.classList.add('light-theme');
-        localStorage.setItem('sara_theme', 'light');
+        storage.setItem('sara_theme', 'light');
       }
     });
   }
