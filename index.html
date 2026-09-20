@@ -41,6 +41,7 @@
     --panel-border: rgba(255,255,255,0.08);
     --violet:#6C5CE7;
     --cyan:#2FE6D0;
+    --ink:#E9EAF3;
     color-scheme: dark;
   }
   html{ scroll-padding-top: env(safe-area-inset-top, 0px); }
@@ -343,6 +344,12 @@
           <span class="lang-en">Start a project</span>
           <span class="lang-hi">प्रोजेक्ट शुरू करें</span>
         </a>
+        <!-- Direct Ask Sara launch inside Hero CTA -->
+        <button id="sara-launch-hero" class="btn-ghost rounded-full px-6 py-3 mono text-sm cursor-hover flex items-center gap-2">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse"></span>
+          <span class="lang-en">Ask Sara AI</span>
+          <span class="lang-hi">सारा एआई से पूछें</span>
+        </button>
         <div class="flex items-center gap-2 mono text-xs text-slate-400 ml-1">
           <span class="status-dot"></span> 
           <span class="lang-en">Open for freelance work</span>
@@ -636,6 +643,32 @@
           <p id="form-status" class="hidden text-center text-xs mt-3 mono"></p>
         </form>
       </div>
+    </div>
+  </section>
+
+  <!-- SARA PROMPTER BANNER SECTION (Unmissable for Users) -->
+  <section class="px-6 md:px-10 py-12 bg-white/[0.02] border-y border-white/5 reveal">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <span class="relative flex h-3 w-3">
+          <span class="absolute inline-flex h-full w-full rounded-full bg-cyan opacity-75 animate-ping"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan"></span>
+        </span>
+        <div>
+          <h3 class="font-display text-xl font-medium">
+            <span class="lang-en">Have quick questions? Chat with Sara AI</span>
+            <span class="lang-hi">तुरंत सवाल हैं? सारा एआई से चैट करें</span>
+          </h3>
+          <p class="text-sm text-slate-400 mt-1">
+            <span class="lang-en">Ask about skills, check project details, or hire me instantly.</span>
+            <span class="lang-hi">स्किल्स, प्रोजेक्ट्स या सीधे काम पर रखने के बारे में पूछें।</span>
+          </p>
+        </div>
+      </div>
+      <button id="sara-launch-bottom" class="btn-primary rounded-full px-6 py-3 mono text-sm flex items-center gap-2 cursor-hover">
+        <span class="lang-en">Start Chat</span>
+        <span class="lang-hi">चैट शुरू करें</span>
+      </button>
     </div>
   </section>
 
@@ -1044,6 +1077,8 @@
   var panel = document.getElementById('sara-panel');
   var launch = document.getElementById('sara-launch');
   var launchNav = document.getElementById('sara-launch-nav');
+  var launchHero = document.getElementById('sara-launch-hero');
+  var launchBottom = document.getElementById('sara-launch-bottom');
   var closeBtn = document.getElementById('sara-close');
   var messages = document.getElementById('sara-messages');
   var form = document.getElementById('sara-form');
@@ -1234,6 +1269,8 @@
     if (panel.classList.contains('hidden')) openPanel(); else closePanel();
   });
   launchNav.addEventListener('click', openPanel);
+  if (launchHero) launchHero.addEventListener('click', openPanel);
+  if (launchBottom) launchBottom.addEventListener('click', openPanel);
   closeBtn.addEventListener('click', closePanel);
 
   form.addEventListener('submit', function(e){
