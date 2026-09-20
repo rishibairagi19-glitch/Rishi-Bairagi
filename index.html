@@ -112,10 +112,10 @@
   .hairline{ background:linear-gradient(90deg, transparent, rgba(233,234,243,.25), transparent); height:1px; }
 
   .btn-primary{
-    background:var(--ink); color:var(--void);
+    background:var(--ink) !important; color:var(--void) !important;
     transition: transform .35s cubic-bezier(.2,.8,.2,1), background .35s ease;
   }
-  .btn-primary:hover{ transform:translateY(-2px); background:var(--cyan); }
+  .btn-primary:hover{ transform:translateY(-2px); background:var(--cyan) !important; }
 
   .btn-ghost{
     border:1px solid rgba(233,234,243,.25);
@@ -125,13 +125,13 @@
 
   .status-dot{
     width:8px; height:8px; border-radius:50%; background:var(--cyan);
-    box-shadow:0 0 0 0 rgba(47,230,208,.6);
+    box-shadow:0 0 0 0 var(--glow-color);
     animation:pulse 2.2s infinite;
   }
   @keyframes pulse{
-    0%{ box-shadow:0 0 0 0 rgba(47,230,208,.55); }
-    70%{ box-shadow:0 0 0 10px rgba(47,230,208,0); }
-    100%{ box-shadow:0 0 0 0 rgba(47,230,208,0); }
+    0%{ box-shadow:0 0 0 0 var(--glow-color); }
+    70%{ box-shadow:0 0 0 10px var(--glow-color-zero); }
+    100%{ box-shadow:0 0 0 0 var(--glow-color-zero); }
   }
 
   .reveal{ opacity:0; transform:translateY(28px); }
@@ -190,6 +190,11 @@
     transform-origin: bottom right;
   }
 
+  :root {
+    --glow-color: rgba(47,230,208,0.55);
+    --glow-color-zero: rgba(47,230,208,0);
+  }
+
   /* Language and Theme Toggle Controls */
   html[lang="en"] .lang-hi { display: none !important; }
   html[lang="hi"] .lang-en { display: none !important; }
@@ -201,6 +206,8 @@
     --panel-border: rgba(0, 0, 0, 0.08);
     --violet: #5A49E3;
     --cyan: #10B29E;
+    --glow-color: rgba(16, 178, 158, 0.55);
+    --glow-color-zero: rgba(16, 178, 158, 0);
     color-scheme: light;
   }
   .light-theme, .light-theme body {
@@ -209,6 +216,7 @@
   }
   .light-theme .text-ink { color: #1A1D2C !important; }
   .light-theme .text-slate-400 { color: #5C6175 !important; }
+  .light-theme .text-slate-300 { color: #4A4F63 !important; }
   .light-theme .text-slate-500 { color: #7B809A !important; }
   .light-theme .bg-void { background-color: var(--void) !important; }
   .light-theme .glass {
@@ -228,6 +236,16 @@
   .light-theme .text-white\/25 { color: rgba(0, 0, 0, 0.2) !important; }
   .light-theme .text-white\/15 { color: rgba(0, 0, 0, 0.12) !important; }
   .light-theme .text-white\/10 { color: rgba(0, 0, 0, 0.08) !important; }
+  .light-theme #cursor-ring {
+    border-color: rgba(26, 29, 44, 0.3) !important;
+  }
+  .light-theme #cursor-ring.is-active {
+    border-color: var(--cyan) !important;
+    background: rgba(16, 178, 158, 0.08) !important;
+  }
+  .light-theme input::placeholder, .light-theme textarea::placeholder {
+    color: #7B809A !important;
+  }
   .light-theme .btn-primary { background: #1A1D2C !important; color: #F8F9FD !important; }
   .light-theme .btn-primary:hover { background: var(--cyan) !important; color: #F8F9FD !important; }
   .light-theme .btn-ghost { border-color: rgba(0, 0, 0, 0.15) !important; color: #1A1D2C !important; }
@@ -457,7 +475,7 @@
       <div class="space-y-6">
 
         <!-- Project 1 -->
-        <article class="reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12">
+        <a href="https://accountancy-theta.vercel.app/" target="_blank" rel="noopener" class="block reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12 cursor-hover">
           <div class="thumb thumb-ledger md:col-span-5 aspect-video md:aspect-auto min-h-[220px] overflow-hidden relative">
             <img src="https://lh3.googleusercontent.com/d/1DRNldbUF01m02VTMMtOrIgAhGKdCuV9b" alt="Accountancy App" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 hover:scale-105" />
           </div>
@@ -472,10 +490,10 @@
               <span class="lang-hi">व्यक्तिगत खाता ट्रैकिंग के लिए एक उन्नत वित्तीय प्रबंधन मंच — बहीखाता को उसी तरह से संभालने के लिए बनाया गया है जैसे कोई छोटा व्यवसाय Tally का उपयोग करेगा, जिसमें आधुनिक फीचर्स जोड़े गए हैं: रनिंग लेज़र, वर्गीकृत प्रविष्टियाँ और कैश फ्लो का स्पष्ट दृश्य।</span>
             </p>
           </div>
-        </article>
+        </a>
 
         <!-- Project 2 -->
-        <article class="reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12">
+        <a href="https://market-three-ashy.vercel.app/" target="_blank" rel="noopener" class="block reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12 cursor-hover">
           <div class="md:col-span-7 p-8 md:p-10 flex flex-col justify-center order-2 md:order-1">
             <span class="mono text-xs text-cyan mb-3">no-code publishing · QR commerce</span>
             <h3 class="font-display text-2xl md:text-[28px] mb-3">
@@ -490,10 +508,10 @@
           <div class="thumb thumb-market md:col-span-5 aspect-video md:aspect-auto min-h-[220px] overflow-hidden relative order-1 md:order-2">
             <img src="https://lh3.googleusercontent.com/d/1ZWQKodtuSV9465x_D8mVnOeT_5r7Bxns" alt="Market Space" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 hover:scale-105" />
           </div>
-        </article>
+        </a>
 
         <!-- Project 3 -->
-        <article class="reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12">
+        <a href="https://mik-vender-qi3b.vercel.app/" target="_blank" rel="noopener" class="block reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12 cursor-hover">
           <div class="thumb thumb-vendor md:col-span-5 aspect-video md:aspect-auto min-h-[220px] overflow-hidden relative">
             <img src="https://lh3.googleusercontent.com/d/1mc80yH_cm4iqxEKI43MBLrkqZ8wUBqYn" alt="My Vendor App" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 hover:scale-105" />
           </div>
@@ -508,10 +526,10 @@
               <span class="lang-hi">आवर्ती-वितरण (recurring-delivery) व्यवसायों के लिए एक त्रि-पक्षीय मंच — जैसे दूध या पानी के विक्रेता — जिसमें ओनर, वेंडर और कस्टमर के लिए अलग लॉगिन हैं। मासिक बिलिंग और डिलीवरी को संभालता है, जबकि ग्राहक बिना किसी फोन कॉल के अपना बिल, भुगतान इतिहास और बकाया राशि देख सकते हैं।</span>
             </p>
           </div>
-        </article>
+        </a>
 
         <!-- Project 4 -->
-        <article class="reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12">
+        <a href="https://dietmandsaur.com/" target="_blank" rel="noopener" class="block reveal glass rounded-2xl overflow-hidden grid md:grid-cols-12 cursor-hover">
           <div class="md:col-span-7 p-8 md:p-10 flex flex-col justify-center order-2 md:order-1">
             <span class="mono text-xs text-cyan mb-3">institutional website</span>
             <h3 class="font-display text-2xl md:text-[28px] mb-3">
@@ -526,7 +544,7 @@
           <div class="thumb thumb-diet md:col-span-5 aspect-video md:aspect-auto min-h-[220px] overflow-hidden relative order-1 md:order-2">
             <img src="https://lh3.googleusercontent.com/d/1klbsmW318LMw77NmHiV3x-jlT3xipuqS" alt="Diet Mandsaur Web Platform" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500 hover:scale-105" />
           </div>
-        </article>
+        </a>
 
       </div>
     </div>
@@ -1233,11 +1251,32 @@
   if (langBtn) {
     langBtn.textContent = currentLang.toUpperCase();
     langBtn.addEventListener('click', function() {
-      currentLang = currentLang === 'en' ? 'hi' : 'en';
-      document.documentElement.setAttribute('lang', currentLang);
-      storage.setItem('sara_lang', currentLang);
-      langBtn.textContent = currentLang.toUpperCase();
-      renderSuggestions();
+      // Select all translation containers (parents of .lang-en and .lang-hi)
+      var targets = Array.from(document.querySelectorAll('.lang-en, .lang-hi'))
+        .map(function(el) { return el.parentElement; })
+        .filter(function(el, idx, self) { return el && self.indexOf(el) === idx; });
+
+      // Sort from top of the page to the bottom
+      targets.sort(function(a, b) {
+        return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+      });
+
+      // Beautiful transition wave
+      gsap.to(targets, {
+        opacity: 0,
+        y: -6,
+        duration: 0.2,
+        stagger: 0.015,
+        ease: 'power2.in',
+        onComplete: function() {
+          currentLang = currentLang === 'en' ? 'hi' : 'en';
+          document.documentElement.setAttribute('lang', currentLang);
+          storage.setItem('sara_lang', currentLang);
+          langBtn.textContent = currentLang.toUpperCase();
+          renderSuggestions();
+          gsap.fromTo(targets, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.015, ease: 'power2.out' });
+        }
+      });
     });
   }
   
