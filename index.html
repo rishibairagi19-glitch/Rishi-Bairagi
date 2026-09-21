@@ -190,6 +190,12 @@
   #sara-panel{
     transform-origin: bottom right;
   }
+  #sara-messages {
+    background-image: linear-gradient(rgba(13, 16, 32, 0.85), rgba(13, 16, 32, 0.85)), url('https://lh3.googleusercontent.com/d/1LQs6Ykfw3cR8DylmKJbzn6A5E61VEdV2');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
 
   :root {
     --glow-color: rgba(47,230,208,0.55);
@@ -253,6 +259,9 @@
   .light-theme .btn-ghost:hover { border-color: var(--cyan) !important; background: rgba(16, 178, 158, 0.05) !important; }
   .light-theme #sara-messages div .bg-white { background-color: #1A1D2C !important; color: #F8F9FD !important; }
   .light-theme #sara-messages div .bg-white\/10 { background-color: rgba(0, 0, 0, 0.06) !important; color: #1A1D2C !important; }
+  .light-theme #sara-messages {
+    background-image: linear-gradient(rgba(248, 249, 253, 0.9), rgba(248, 249, 253, 0.9)), url('https://lh3.googleusercontent.com/d/1LQs6Ykfw3cR8DylmKJbzn6A5E61VEdV2') !important;
+  }
   .light-theme .grad-text {
     background: linear-gradient(100deg, #1A1D2C 20%, var(--cyan) 55%, var(--violet) 85%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -1210,10 +1219,31 @@
       setTimeout(clearChat, 10);
       return activeLang === 'hi' ? "चैट साफ़ कर दी गई है!" : "Chat history cleared!";
     }
-    if (msg === '/help' || msg === 'help' || msg === 'मदद') {
-      return activeLang === 'hi' 
-        ? "आप मुझसे पूछ सकते हैं: 'skills', 'projects', 'My Vendor App' या 'contact'!" 
-        : "You can ask me about: 'skills', 'projects', specific project names, or 'contact'!";
+
+    // Dynamic Help & Superpowers Guide (AI Capability Discovery)
+    var helpWords = ['/help', 'help', 'मदद', 'superpower', 'पावर', 'kya kar sakti', 'what can you do', 'features', 'फीचर'];
+    var wantsHelp = false;
+    for (var i = 0; i < helpWords.length; i++) {
+      if (msg.includes(helpWords[i])) { wantsHelp = true; break; }
+    }
+    if (wantsHelp) {
+      if (activeLang === 'hi') {
+        return "✨ <strong>मेरी सुपर-पावर्स (AI Superpowers):</strong><br><br>" +
+               "🔹 <strong>पेज नेविगेशन:</strong> किसी भी प्रोजेक्ट या कौशल का नाम लिखें, मैं खुद स्क्रॉल कर दूँगी!<br>" +
+               "🔹 <strong>वेबसाइट थीम बदलें:</strong> बस लिखें 'थीम बदलो' या 'dark mode' और देखें जादू! 🌓<br>" +
+               "🔹 <strong>क्लिपबोर्ड कॉपी:</strong> 'copy email' या 'copy phone' लिखें, डायरेक्ट कॉपी हो जाएगा! 📋<br>" +
+               "🔹 <strong>व्हाट्सएप चैट:</strong> ऋषि से सीधे व्हाट्सएप पर बात करने के लिए 'whatsapp' लिखें! 💬<br>" +
+               "🔹 <strong>मजेदार चुटकुले:</strong> कोडिंग जोक्स सुनने के लिए 'joke' या 'मजाक' लिखें! 🎵🤪<br>" +
+               "🔹 <strong>तारीफ रिएक्शन:</strong> मेरी या ऋषि के काम की तारीफ करके देखें... ❤️✨";
+      } else {
+        return "✨ <strong>My AI Superpowers:</strong><br><br>" +
+               "🔹 <strong>Smart Tour Guide:</strong> Type any skill or project, and I will scroll the webpage to it!<br>" +
+               "🔹 <strong>Site Theme Control:</strong> Type 'change theme' or 'dark mode' to switch the website looks! 🌓<br>" +
+               "🔹 <strong>Clipboard Copy:</strong> Type 'copy email' or 'copy phone' to instantly copy contacts! 📋<br>" +
+               "🔹 <strong>WhatsApp Direct:</strong> Type 'whatsapp' to launch a pre-filled direct chat with Rishi! 💬<br>" +
+               "🔹 <strong>Dev Jokes:</strong> Type 'joke' to hear funny programming jokes with live tunes! 🎵🤪<br>" +
+               "🔹 <strong>Praise React:</strong> Try giving me a compliment (like 'awesome' or 'smart')... ❤️✨";
+      }
     }
 
     // WhatsApp Direct Deep-link Generator (AI Utility Upgrade)
@@ -1449,12 +1479,13 @@
       suggestions = activeLang === 'hi' ? [
         { text: "💻 स्किल्स", query: "आपके मुख्य स्किल्स क्या हैं?" },
         { text: "🚀 प्रोजेक्ट्स", query: "मुझे अपने प्रोजेक्ट्स के बारे में बताओ" },
-        { text: "💼 काम के लिए", query: "क्या आप काम के लिए उपलब्ध हैं?" },
-        { text: "📞 संपर्क सूत्र", query: "आपसे संपर्क कैसे करें?" }
+        { text: "💡 सुपर-पावर्स", query: "मदद" },
+        { text: "� सुपर-पावर्स", query: "मदद" },
+        { text: "�📞 संपर्क सूत्र", query: "आपसे संपर्क कैसे करें?" }
       ] : [
         { text: "💻 Core Skills", query: "What are your core skills?" },
         { text: "🚀 See Projects", query: "Tell me about your projects" },
-        { text: "💼 Hire Rishi", query: "Are you available for freelance?" },
+        { text: "💡 Superpowers", query: "help" },
         { text: "📞 Contact Info", query: "How do I contact you?" }
       ];
     }
