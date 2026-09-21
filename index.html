@@ -684,6 +684,10 @@
 
 <!-- SARA WIDGET -->
 <div class="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-3" style="padding-bottom:env(safe-area-inset-bottom,0px);">
+  <div id="sara-nudge" class="hidden glass px-3.5 py-2 rounded-xl text-xs text-cyan border border-cyan/20 animate-bounce cursor-hover select-none shadow-md max-w-[200px] text-center">
+    <span class="lang-en">👋 Ask me any questions!</span>
+    <span class="lang-hi">👋 मुझसे कुछ भी पूछें!</span>
+  </div>
   <div id="sara-panel" data-lenis-prevent class="hidden w-[88vw] max-w-[360px] h-[480px] glass rounded-2xl flex flex-col overflow-hidden scale-95 opacity-0" style="overscroll-behavior: contain;">
     <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -738,6 +742,32 @@
   "use strict";
   var prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Premium Synthesized Web Audio Sound Effects (No assets/network fetch needed)
+  var audioCtx = null;
+  function playTone(freq, type, duration) {
+    if (prefersReduced) return;
+    try {
+      var AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      if (!audioCtx) {
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.value = freq || 440;
+      gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch (e) {}
+  }
+
   // Safe localStorage wrapper to prevent SecurityError when running locally (file://) or in iframe
   var storage = {
     getItem: function(key) {
@@ -789,7 +819,9 @@
 
   /* ---------------- Three.js constellation background ---------------- */
   (function bg(){
+    try {
     var canvas = document.getElementById('bg-canvas');
+    if (!canvas) return;
     var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -906,6 +938,9 @@
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
+    } catch (e) {
+      console.warn("WebGL not supported or disabled:", e);
+    }
   })();
 
   /* ---------------- Smooth scroll (Lenis) + GSAP ScrollTrigger ---------------- */
@@ -1179,9 +1214,19 @@
   
   function updateInputPlaceholder() {
     var activeLang = document.documentElement.getAttribute('lang') || 'en';
-    input.placeholder = activeLang === 'hi' 
-      ? "कौशल, प्रोजेक्ट्स या हायर करने के बारे में पूछें..." 
-      : "Ask about skills, projects, hiring…";
+    if (saraState.step === 'collect_email') {
+      input.placeholder = activeLang === 'hi' 
+        ? "अपना ईमेल पता दर्ज करें..." 
+        : "Enter your email address...";
+    } else if (saraState.step === 'collect_msg') {
+      input.placeholder = activeLang === 'hi' 
+        ? "अपना संदेश लिखें..." 
+        : "Type your message here...";
+    } else {
+      input.placeholder = activeLang === 'hi' 
+        ? "कौशल, प्रोजेक्ट्स या हायर करने के बारे में पूछें..." 
+        : "Ask about skills, projects, hiring…";
+    }
   }
 
   function renderSuggestions() {
@@ -1264,10 +1309,13 @@
       : 'bg-white/10 text-ink') + ' rounded-2xl px-4 py-2.5 max-w-[80%] leading-relaxed';
     if (from === 'user') {
       bubble.textContent = text;
+      playTone(600, 'sine', 0.08); // Quick subtle outgoing tap
     } else {
       var htmlText = text
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/🔹/g, '<span class="text-cyan drop-shadow-[0_0_4px_rgba(47,230,208,0.5)]">🔹</span>');
       bubble.innerHTML = htmlText;
+      playTone(480, 'sine', 0.12); // Soft warm incoming bubble pop
     }
     row.appendChild(bubble);
     messages.appendChild(row);
@@ -1290,7 +1338,7 @@
         saraState.step = 'idle';
         saraState.email = '';
         saraState.message = '';
-          renderSuggestions();
+        renderSuggestions();
         addMsg(activeLang === 'hi' ? "प्रक्रिया रद्द कर दी गई है। आप फिर से सामान्य प्रश्न पूछ सकते हैं।" : "Process cancelled. You can ask general questions again.", 'bot');
       }, 750);
       return;
@@ -1306,7 +1354,7 @@
         } else {
           saraState.email = email;
           saraState.step = 'collect_msg';
-            renderSuggestions();
+          renderSuggestions();
           addMsg(activeLang === 'hi' ? "बढ़िया! अब आप जो संदेश ऋषि को भेजना चाहते हैं, उसे यहाँ लिखें:" : "Perfect! Now, type the message you would like to send to Rishi:", 'bot');
         }
       }, 750);
@@ -1319,7 +1367,7 @@
         hideTyping();
         saraState.message = val.trim();
         saraState.step = 'sending';
-          renderSuggestions();
+        renderSuggestions();
         addMsg(activeLang === 'hi' ? "आपका संदेश सुरक्षित रूप से भेजा जा रहा है..." : "Sending your message securely...", 'bot');
         showTyping();
 
@@ -1343,13 +1391,13 @@
             addMsg(activeLang === 'hi' ? "क्षमा करें, संदेश भेजने में कोई त्रुटि हुई। कृपया नीचे दिए गए कांटेक्ट फॉर्म का उपयोग करें।" : "Sorry, there was an issue sending your message. Please use the contact form on the page.", 'bot');
           }
           saraState.step = 'idle';
-            renderSuggestions();
+          renderSuggestions();
         })
         .catch(function() {
           hideTyping();
           addMsg(activeLang === 'hi' ? "नेटवर्क एरर! कृपया इंटरनेट कनेक्शन की जांच करें।" : "Network error! Please check your internet connection.", 'bot');
           saraState.step = 'idle';
-            renderSuggestions();
+          renderSuggestions();
         });
       }, 750);
       return;
@@ -1360,7 +1408,7 @@
       setTimeout(function() {
         hideTyping();
         saraState.step = 'collect_email';
-          renderSuggestions();
+        renderSuggestions();
         addMsg(activeLang === 'hi' ? "बढ़िया! पहले अपना ईमेल पता बताएं ताकि ऋषि आपसे संपर्क कर सकें:" : "Awesome! First, please enter your email address so Rishi can reach back to you:", 'bot');
       }, 750);
       return;
@@ -1373,6 +1421,8 @@
   }
 
   function openPanel(){
+    var nudge = document.getElementById('sara-nudge');
+    if (nudge) nudge.classList.add('hidden');
     panel.classList.remove('hidden');
     gsap.to(panel, { opacity:1, scale:1, duration:.35, ease:'power2.out' });
     if (!opened){
@@ -1409,10 +1459,13 @@
   // Setup Header Toggle Buttons
   var themeBtn = document.getElementById('theme-toggle');
   var langBtn = document.getElementById('lang-toggle');
+  var isTranslating = false;
   
   if (langBtn) {
     langBtn.textContent = currentLang.toUpperCase();
     langBtn.addEventListener('click', function() {
+      if (isTranslating) return;
+      isTranslating = true;
       // Select all translation containers (parents of .lang-en and .lang-hi)
       var targets = Array.from(document.querySelectorAll('.lang-en, .lang-hi'))
         .map(function(el) { return el.parentElement; })
@@ -1436,7 +1489,16 @@
           storage.setItem('sara_lang', currentLang);
           langBtn.textContent = currentLang.toUpperCase();
           renderSuggestions();
-          gsap.fromTo(targets, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.3, stagger: 0.015, ease: 'power2.out' });
+          gsap.fromTo(targets, { opacity: 0, y: 6 }, { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.3, 
+            stagger: 0.015, 
+            ease: 'power2.out',
+            onComplete: function() {
+              isTranslating = false;
+            }
+          });
         }
       });
     });
@@ -1454,7 +1516,7 @@
 
     micBtn.addEventListener('click', function() {
       var activeLang = document.documentElement.getAttribute('lang') || 'en';
-      recognition.lang = activeLang === 'hi' ? 'hi-IN' : 'en-US';
+      recognition.lang = activeLang === 'hi' ? 'hi-IN' : 'en-IN';
       if (isListening) {
         recognition.stop();
       } else {
@@ -1468,19 +1530,24 @@
 
     recognition.onstart = function() {
       isListening = true;
+      playTone(880, 'sine', 0.15); // Clear chime alerting that mic is listening
       micBtn.classList.add('text-red-500', 'animate-pulse');
+      var activeLang = document.documentElement.getAttribute('lang') || 'en';
+      input.placeholder = activeLang === 'hi' ? "सुन रहा हूँ... बोलिए (हिंदी)" : "Listening... Speak now (Indian English)";
     };
     recognition.onresult = function(event) {
       var transcript = event.results[0][0].transcript;
-      input.value = transcript;
-      form.dispatchEvent(new Event('submit'));
+      input.value = '';
+      handleUserMsg(transcript);
     };
     recognition.onerror = function() { 
       recognition.stop(); 
     };
     recognition.onend = function() { 
       isListening = false;
+      playTone(440, 'sine', 0.1); // Quick off tone
       micBtn.classList.remove('text-red-500', 'animate-pulse'); 
+      updateInputPlaceholder();
     };
   }
 
@@ -1495,6 +1562,16 @@
       }
     });
   }
+
+  // Trigger auto-nudge delay if widget is not opened yet
+  setTimeout(function() {
+    var nudge = document.getElementById('sara-nudge');
+    if (nudge && !opened) {
+      nudge.classList.remove('hidden');
+      nudge.addEventListener('click', openPanel);
+    }
+  }, 4000);
+
   renderSuggestions();
 
   // Setup Contact Form Submissions
