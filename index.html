@@ -684,26 +684,34 @@
 
 <!-- SARA WIDGET -->
 <div class="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-3" style="padding-bottom:env(safe-area-inset-bottom,0px);">
-  <div id="sara-panel" class="hidden w-[88vw] max-w-[360px] h-[480px] glass rounded-2xl flex flex-col overflow-hidden scale-95 opacity-0">
+  <div id="sara-panel" data-lenis-prevent class="hidden w-[88vw] max-w-[360px] h-[480px] glass rounded-2xl flex flex-col overflow-hidden scale-95 opacity-0" style="overscroll-behavior: contain;">
     <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
       <div class="flex items-center gap-3">
         <span class="w-2.5 h-2.5 rounded-full bg-cyan"></span>
         <div>
-          <p class="text-sm font-medium leading-none">Sara</p>
+          <p class="text-sm font-medium leading-none">Rishi Personal Assistant Sara</p>
           <p class="mono text-[11px] text-slate-500 mt-1">
-            <span class="lang-en">Rishi's assistant</span>
-            <span class="lang-hi">ऋषि की असिस्टेंट</span>
+            <span class="lang-en">Rishi's Personal Assistant</span>
+            <span class="lang-hi">ऋषि की पर्सनल असिस्टेंट</span>
           </p>
         </div>
       </div>
       <button id="sara-close" aria-label="Close chat" class="text-slate-400 hover:text-ink cursor-hover text-lg leading-none">&times;</button>
     </div>
-    <div id="sara-messages" class="flex-1 overflow-y-auto px-5 py-4 space-y-3 text-[13.5px]"></div>
-    <div id="sara-suggest" class="px-5 py-2 flex flex-wrap gap-2 border-t border-white/5 bg-white/[0.02]"></div>
+    <div id="sara-messages" data-lenis-prevent class="flex-1 overflow-y-auto px-5 py-4 space-y-3 text-[13.5px]" style="overscroll-behavior: contain;"></div>
+    <div id="sara-suggest" data-lenis-prevent class="px-5 py-2 flex flex-wrap gap-2 border-t border-white/5 bg-white/[0.02]" style="overscroll-behavior: contain;"></div>
     <form id="sara-form" class="border-t border-white/10 p-3 flex items-center gap-2">
       <input id="sara-input" type="text" autocomplete="off" placeholder="Ask about skills, projects, hiring…"
         class="flex-1 bg-transparent px-3 py-2 text-sm text-ink placeholder:text-slate-500 focus:outline-none" />
-      <button type="submit" aria-label="Send message" class="btn-primary rounded-full w-9 h-9 flex items-center justify-center cursor-hover">
+      <button type="button" id="sara-mic" aria-label="Voice Input" class="text-slate-400 hover:text-cyan p-2 cursor-hover transition-all rounded-full hidden shrink-0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+          <path d="M19 10v1a7 7 0 0 1-14 0v-1"/>
+          <line x1="12" y1="19" x2="12" y2="23"/>
+          <line x1="8" y1="23" x2="16" y2="23"/>
+        </svg>
+      </button>
+      <button type="submit" aria-label="Send message" class="btn-primary rounded-full w-9 h-9 flex items-center justify-center cursor-hover shrink-0">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M3 11L21 3L13 21L11 13L3 11Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
       </button>
     </form>
@@ -946,71 +954,116 @@
   /* ---------------- Sara — hardcoded assistant ---------------- */
   var CONTACT_BLOCK = "You can reach Rishi directly — email rishibairagi19@gmail.com, call +91 62634 94837, or check github.com/rishibairagi19-glitch.";
 
-  var RULES = [
+  // Advanced Modular Knowledge Base
+  var CONCEPTS = [
     {
-      k: ['hello','hi','hey','yo','namaste','ram ram','pranam','नमस्ते','हेलो','हाय'],
-      a_en: "Hi, I'm Sara — I can talk about Rishi's skills, his projects, or how to hire him for freelance work. What would you like to know?",
-      a_hi: "नमस्ते! मैं सारा हूँ — मैं ऋषि के स्किल्स, प्रोजेक्ट्स, या काम के बारे में बता सकती हूँ। आप क्या जानना चाहते हैं?"
+      id: 'python',
+      keys: ['python', 'पायथन', 'पाईथन', 'py'],
+      name: { en: "Python Development", hi: "पायथन डेवलपमेंट" },
+      text: {
+        en: "Python is one of Rishi's main languages, used for powerful backend systems, automated scrapers, and smart business logic.",
+        hi: "पायथन ऋषि की मुख्य प्रोग्रामिंग भाषा है, जिसका उपयोग वे मजबूत बैकएंड सिस्टम, डेटा स्क्रैपर्स और ऑटोमेशन के लिए करते हैं।"
+      }
     },
     {
-      k: ['who are you','what are you','sara','tum kaun ho','tera naam kya hai','कौन हो'],
-      a_en: "I'm Sara, a smart hardcoded assistant sitting on Rishi's portfolio. Ask me about his skills, his projects, or freelance availability.",
-      a_hi: "मैं सारा हूँ, ऋषि की स्मार्ट एआई असिस्टेंट। आप मुझसे उनके स्किल्स, प्रोजेक्ट्स या काम की उपलब्धता के बारे में पूछ सकते हैं।"
+      id: 'js',
+      keys: ['javascript', 'js', 'typescript', 'ts', 'जावास्क्रिप्ट', 'जेएस', 'टाइपस्क्रिप्ट'],
+      name: { en: "JavaScript & TypeScript", hi: "जावास्क्रिप्ट और टाइपस्क्रिप्ट" },
+      text: {
+        en: "JS/TS is Rishi's specialty, used daily to build interactive frontend UIs (React) and super-fast server-side APIs (Node.js).",
+        hi: "JS/TS ऋषि का मुख्य हथियार है, जिसका उपयोग वे रेस्पॉन्सिव फ्रंटएंड यूआई (React) और तेज़ एपीआई (Node.js) बनाने के लिए करते हैं।"
+      }
     },
     {
-      k: ['skill','expertise','stack','language','tech','know','good at','kya aata hai','kya janta hai','कौशल','स्किल्स'],
-      a_en: "Rishi's core strength is HTML, JavaScript and Python. Beyond that he has working knowledge across TypeScript, Node.js, SQL, React and most languages a project might need.",
-      a_hi: "ऋषि के मुख्य कौशल HTML, JavaScript और Python हैं। इसके अलावा उन्हें TypeScript, Node.js, SQL, React और अन्य भाषाओं का भी व्यावहारिक ज्ञान है।"
+      id: 'skills',
+      keys: ['skill', 'expertise', 'stack', 'language', 'tech', 'know', 'good at', 'kya aata hai', 'kya janta hai', 'कौशल', 'स्किल्स', 'तकनीक'],
+      name: { en: "Core Technologies", hi: "मुख्य तकनीकी कौशल" },
+      text: {
+        en: "Rishi is expert in **HTML**, **JavaScript**, and **Python**, with practical experience in React, Node.js, TypeScript, SQL, and Git.",
+        hi: "ऋषि **HTML**, **JavaScript**, और **Python** में एक्सपर्ट हैं, और उन्हें React, Node.js, TypeScript, SQL, और Git का बेहतरीन व्यावहारिक ज्ञान है।"
+      }
     },
     {
-      k: ['python','पायथन'],
-      a_en: "Python is one of Rishi's core languages — used for backend systems, smart automation, and scripting.",
-      a_hi: "पायथन ऋषि के कोर लैंग्वेजेस में से एक है — इसका उपयोग बैकएंड लॉजिक, ऑटोमेशन और डेटा प्रोसेसिंग में किया जाता है।"
+      id: 'accountancy',
+      keys: ['accountancy', 'ledger', 'tally', 'finance', 'accounting', 'खाता', 'पैसा', 'बहीखाता', 'अकाउंट'],
+      name: { en: "Accountancy App", hi: "अकाउंटेंसी ऐप" },
+      text: {
+        en: "The **Accountancy App** is an advanced ledger system for personal/business bookkeeping. <a href='https://accountancy-theta.vercel.app/' target='_blank' class='text-cyan underline hover:text-cyan/80'>Try Live App</a>",
+        hi: "**अकाउंटेंसी ऐप** व्यक्तिगत और व्यावसायिक बहीखाता (Tally की तरह) को ट्रैक करने के लिए बनाया गया एक बेहतरीन फाइनेंस प्लेटफॉर्म है। <a href='https://accountancy-theta.vercel.app/' target='_blank' class='text-cyan underline hover:text-cyan/80'>लाइव ऐप देखें</a>"
+      }
     },
     {
-      k: ['javascript','js','जेएस'],
-      a_en: "JavaScript is Rishi's bread and butter, used daily across interactive frontend UI and solid Node.js backends.",
-      a_hi: "जावास्क्रिप्ट ऋषि का मुख्य हथियार है, जिसका उपयोग वे फ्रंटएंड इंटरफेस और मजबूत Node.js बैकएंड दोनों में करते हैं।"
+      id: 'marketspace',
+      keys: ['market space', 'marketspace', 'qr', 'shop', 'store', 'मार्केट', 'दुकान'],
+      name: { en: "Market Space App", hi: "मार्केट स्पेस ऐप" },
+      text: {
+        en: "**Market Space** is a zero-friction store builder that allows businesses to launch a digital page and receive orders directly via QR scans. <a href='https://market-three-ashy.vercel.app/' target='_blank' class='text-cyan underline hover:text-cyan/80'>Try Live App</a>",
+        hi: "**मार्केट स्पेस** एक शानदार नो-कोड स्टोरफ्रंट बिल्डर है, जहाँ व्यवसायी सीधे QR कोड से संचालित होने वाला तेज़ ऑनलाइन दुकान पेज मिनटों में बना सकते हैं। <a href='https://market-three-ashy.vercel.app/' target='_blank' class='text-cyan underline hover:text-cyan/80'>लाइव ऐप देखें</a>"
+      }
     },
     {
-      k: ['project','work','portfolio','built','build','kaam','banao','क्या बनाया','प्रोजेक्ट'],
-      a_en: "Rishi has built: 1. Accountancy App (personal finance ledger), 2. Market Space (no-code page builder & QR shop), 3. My Vendor App (multi-login delivery platform), 4. Diet Mandsaur Web Platform. Ask me about any specific project!",
-      a_hi: "ऋषि ने ये प्रोजेक्ट्स बनाए हैं: 1. Accountancy App (फाइनेंस लेजर), 2. Market Space (नो-कोड पेज बिल्डर), 3. My Vendor App (मल्टी-लॉगिन बिलिंग ऐप), 4. Diet Mandsaur वेब प्लेटफॉर्म। किसी भी प्रोजेक्ट के बारे में विस्तार से पूछें!"
+      id: 'vendor',
+      keys: ['vender', 'vendor', 'milk', 'water', 'billing', 'दूध', 'पानी', 'विक्रेता', 'वेंडर'],
+      name: { en: "My Vendor App", hi: "माय वेंडर ऐप" },
+      text: {
+        en: "**My Vendor App** automates daily/monthly recurring deliveries and billing for milk/water businesses. <a href='https://mik-vender-qi3b.vercel.app/' target='_blank' class='text-cyan underline hover:text-cyan/80'>Try Live App</a>",
+        hi: "**माय वेंडर ऐप** दूध या पानी सप्लायर्स जैसी आवर्ती डिलीवरी वाले व्यवसायों के लिए ऑटो-बिलिंग और डिलीवरी ट्रैकिंग का त्रि-पक्षीय (Three-sided) प्लेटफ़ॉर्म है। <a href='https://mik-vender-qi3b.vercel.app/' target='_blank' class='text-cyan underline hover:text-cyan/80'>लाइव ऐप देखें</a>"
+      }
     },
     {
-      k: ['accountancy','tally','finance','ledger','accounting','खाता','पैसा'],
-      a_en: "The Accountancy App is a high-performance personal finance platform built to track day-to-day books, running ledgers, and categorized transactions cleanly.",
-      a_hi: "Accountancy App एक शानदार पर्सनल फाइनेंस प्लेटफॉर्म है, जिसे दैनिक बहीखाता (Tally की तरह), लेजर और ट्रांजेक्शन ट्रैक करने के लिए बनाया गया है।"
+      id: 'diet',
+      keys: ['diet', 'mandsaur', 'college', 'school', 'डाइट', 'कॉलेज', 'यूनिवर्सिटी'],
+      name: { en: "Diet Mandsaur Portal", hi: "डाइट मंदसौर वेब पोर्टल" },
+      text: {
+        en: "**Diet Mandsaur** is the official web portal designed and developed by Rishi Bairagi for the administrative and academic needs of Diet College. <a href='https://dietmandsaur.com/' target='_blank' class='text-cyan underline hover:text-cyan/80'>Visit Portal</a>",
+        hi: "**डाइट मंदसौर** डाइट कॉलेज की आधिकारिक वेबसाइट है जिसे ऋषि ने कॉलेज गतिविधियों, सूचनाओं और प्रबंधन के लिए डिज़ाइन और डेवलप किया है। <a href='https://dietmandsaur.com/' target='_blank' class='text-cyan underline hover:text-cyan/80'>वेबसाइट पर जाएँ</a>"
+      }
     },
     {
-      k: ['market space','marketspace','qr','shop','store','मार्केट'],
-      a_en: "Market Space allows businesses to generate high-speed storefronts. Customers can access pages instantly via QR code without installing any app.",
-      a_hi: "Market Space व्यवसायों को मिनटों में स्टोरफ्रंट बनाने की सुविधा देता है। ग्राहक बिना किसी ऐप को इंस्टॉल किए सीधे QR कोड स्कैन करके स्टोर तक पहुंच सकते हैं।"
+      id: 'freelance',
+      keys: ['hire', 'freelance', 'available', 'availability', 'price', 'cost', 'budget', 'rate', 'नौकरी', 'काम', 'हायर', 'चार्ज', 'फीस', 'पैसा', 'रेट'],
+      name: { en: "Freelance & Hiring", hi: "फ्रीलांस और हायरिंग" },
+      text: {
+        en: "Rishi is highly available for remote contracts and custom software creation. Budgets are completely customized depending on project scope. To send a direct message, reply with **'yes'**!",
+        hi: "ऋषि फ्रीलांस प्रोजेक्ट्स और कस्टम सॉफ्टवेयर समाधानों के लिए उपलब्ध हैं! बजट प्रोजेक्ट के आकार पर निर्भर करता है। डायरेक्ट संदेश भेजने के लिए बस **'हाँ'** टाइप करें!"
+      }
     },
     {
-      k: ['vender','vendor','milk','water','billing','दूध','पानी'],
-      a_en: "My Vendor App features separate portals for Owner, Vendor, and Customer, handling monthly recurring deliveries (like water/milk) and automated digital billing.",
-      a_hi: "My Vendor App दूध या पानी जैसी आवर्ती डिलीवरी (recurring deliveries) के लिए ओनर, वेंडर और कस्टमर हेतु पृथक पोर्टल प्रदान करता है जो मासिक बिलिंग को ऑटोमैटिक करता है।"
+      id: 'contact',
+      keys: ['contact', 'email', 'phone', 'number', 'reach', 'gmail', 'फोन', 'नंबर', 'ईमेल', 'संपर्क', 'कॉल'],
+      name: { en: "Direct Contact Information", hi: "सीधा संपर्क सूत्र" },
+      text: {
+        en: "Reach Rishi via email at **rishibairagi19@gmail.com** or call/WhatsApp at **+91 62634 94837**.",
+        hi: "आप ऋषि से सीधे ईमेल **rishibairagi19@gmail.com** या फोन/व्हाट्सएप **+91 62634 94837** पर संपर्क कर सकते हैं।"
+      }
     },
     {
-      k: ['diet','mandsaur','college','school','डाइट','कॉलेज'],
-      a_en: "The Diet Mandsaur Web Platform is the official academic website covering faculty profiles, circulars, and ongoing portal activities for Diet College.",
-      a_hi: "Diet Mandsaur वेब प्लेटफॉर्म डाइट कॉलेज की आधिकारिक शैक्षणिक वेबसाइट है जो फैकल्टी प्रोफाइल, सर्कुलर और गतिविधियों को होस्ट करती है।"
+      id: 'about',
+      keys: ['who is rishi', 'rishi kaun', 'intro', 'details', 'rishi', 'ऋषि', 'परिचय', 'about rishi'],
+      name: { en: "About Rishi", hi: "ऋषि बैरागी के बारे में" },
+      text: {
+        en: "Rishi Bairagi is a professional software engineer based in Mandsaur, MP, crafting fast, beautiful, and database-driven web systems.",
+        hi: "ऋषि बैरागी मंदसौर, मध्य प्रदेश के एक प्रोफेशनल सॉफ्टवेयर इंजीनियर हैं जो तेज़, रेस्पॉन्सिव और मजबूत वेब प्रणालियों का निर्माण करते हैं।"
+      }
+    }
+  ];
+
+  // Basic conversational intents (if no technical concepts are mentioned)
+  var INTENTS = [
+    {
+      keys: ['hello','hi','hey','yo','namaste','ram ram','pranam','नमस्ते','हेलो','हाय','suno','सुनो'],
+      en: "Hi, I'm Rishi Personal Assistant Sara! I can guide you through Rishi's skills, projects, and custom hiring options. What are you looking for today?",
+      hi: "नमस्ते! मैं ऋषि की पर्सनल असिस्टेंट सारा हूँ। मैं आपको ऋषि के कौशल, प्रोजेक्ट्स या उनके काम के बारे में बता सकती हूँ। आप क्या जानना चाहते हैं?"
     },
     {
-      k: ['hire','freelance','available','availability','collaborate','price','cost','budget','नौकरी','काम','हायर'],
-      a_en: "Rishi is fully available for freelance projects! Would you like to leave him a message right now? Reply with **'yes'** to start.",
-      a_hi: "ऋषि फ्रीलांस प्रोजेक्ट्स के लिए पूरी तरह उपलब्ध हैं! क्या आप उन्हें अभी एक संदेश भेजना चाहते हैं? शुरू करने के लिए **'हाँ'** टाइप करें।"
+      keys: ['who are you','what are you','sara', 'who is sara', 'tum kaun ho','tera naam kya hai','कौन हो','नाम'],
+      en: "I am Rishi Personal Assistant Sara, an intelligent assistant designed to present Rishi's technical capabilities and process direct work inquiries.",
+      hi: "मैं 'ऋषि पर्सनल असिस्टेंट सारा' हूँ। मैं यहाँ ऋषि के काम, अनुभव को संक्षेप में पेश करने और उनके लिए संदेश लेने के लिए हूँ।"
     },
     {
-      k: ['contact','email','phone','number','reach','gmail','फोन','नंबर','ईमेल'],
-      a_en: "You can reach Rishi via email: rishibairagi19@gmail.com. Or, to send a direct message right here, reply with **'yes'**!",
-      a_hi: "आप ऋषि से सीधे rishibairagi19@gmail.com पर संपर्क कर सकते हैं। या यहीं से सीधे संदेश भेजने के लिए **'हाँ'** लिखकर उत्तर दें!"
-    },
-    {
-      k: ['thank','thanks','bye','cool','nice','great','dhanyawad','shukriya','धन्यवाद'],
-      a_en: "You're very welcome! Let me know if you need anything else, or get in touch with Rishi at rishibairagi19@gmail.com.",
-      a_hi: "आपका बहुत-बहुत धन्यवाद! अगर कुछ और जानना हो तो बताएं, या फिर सीधे ऋषि से rishibairagi19@gmail.com पर संपर्क करें।"
+      keys: ['thank','thanks','bye','cool','nice','great','dhanyawad','shukriya','धन्यवाद','अलविदा'],
+      en: "You're welcome! Let me know if you have more questions, or get in touch with Rishi directly at rishibairagi19@gmail.com.",
+      hi: "आपका बहुत स्वागत है! यदि आपके पास कोई और प्रश्न है तो ज़रूर पूछें, या सीधे rishibairagi19@gmail.com पर संपर्क करें।"
     }
   ];
 
@@ -1039,38 +1092,69 @@
         : "Nice to meet you, " + name + "! How can I help you today?";
     }
 
-    var words = msg.split(/\s+/);
-    var bestRule = null;
-    var maxScore = 0;
-
-    for (var i = 0; i < RULES.length; i++) {
-      var rule = RULES[i];
-      var score = 0;
-      for (var j = 0; j < rule.k.length; j++) {
-        var kw = rule.k[j];
-        if (msg.includes(kw)) {
-          score += kw.split(' ').length * 2;
-        } else {
-          words.forEach(function(word) {
-            if (word === kw) score += 1;
-          });
-        }
-      }
-      if (score > maxScore) {
-        maxScore = score;
-        bestRule = rule;
-      }
-    }
-
     var nameSaved = storage.getItem('sara_user_name');
     var prefix = nameSaved ? nameSaved + ", " : "";
 
-    if (maxScore > 0 && bestRule) {
-      var ans = activeLang === 'hi' ? bestRule.a_hi : bestRule.a_en;
-      return prefix + ans;
+    // 1. Scan for matching concepts
+    var matchedConcepts = [];
+    for (var i = 0; i < CONCEPTS.length; i++) {
+      var concept = CONCEPTS[i];
+      var matched = false;
+      for (var j = 0; j < concept.keys.length; j++) {
+        var key = concept.keys[j];
+        if (msg.includes(key)) {
+          matched = true;
+          break;
+        }
+      }
+      if (matched) {
+        matchedConcepts.push(concept);
+      }
     }
+
+    // 2. Scan for matching generic conversational intents (only if no core concepts matched)
+    if (matchedConcepts.length === 0) {
+      for (var i = 0; i < INTENTS.length; i++) {
+        var intent = INTENTS[i];
+        var matched = false;
+        for (var j = 0; j < intent.keys.length; j++) {
+          if (msg.includes(intent.keys[j])) {
+            matched = true;
+            break;
+          }
+        }
+        if (matched) {
+          return prefix + (activeLang === 'hi' ? intent.hi : intent.en);
+        }
+      }
+    }
+
+    // 3. Dynamic output generator based on matches
+    if (matchedConcepts.length === 1) {
+      var c = matchedConcepts[0];
+      return prefix + (activeLang === 'hi' ? c.text.hi : c.text.en);
+    } else if (matchedConcepts.length > 1) {
+      // Combinatorial synthesis! Stitching matched answers into a unified response
+      var response = "";
+      if (activeLang === 'hi') {
+        response = prefix + "मुझे आपके सवाल में इन विषयों के बारे में जानकारी मिली है:<br><br>";
+        matchedConcepts.forEach(function(c) {
+          response += "🔹 <strong>" + c.name.hi + "</strong>: " + c.text.hi + "<br><br>";
+        });
+        response += "क्या आप इनमें से किसी के बारे में और अधिक विस्तार से जानना चाहते हैं?";
+      } else {
+        response = prefix + "Here is what I synthesized based on your question:<br><br>";
+        matchedConcepts.forEach(function(c) {
+          response += "🔹 <strong>" + c.name.en + "</strong>: " + c.text.en + "<br><br>";
+        });
+        response += "Would you like to explore any of these specific areas further?";
+      }
+      return response;
+    }
+
+    // 4. Ultimate Fallback
     return activeLang === 'hi'
-      ? prefix + "क्षमा करें, मुझे यह समझने में थोड़ी कठिनाई हो रही है। मैं केवल ऋषि के कौशल, उनके प्रोजेक्ट्स और काम की उपलब्धता के बारे में बता सकती हूँ। " + "आप उनसे सीधे संपर्क कर सकते हैं: rishibairagi19@gmail.com"
+      ? prefix + "क्षमा करें, मुझे यह समझने में थोड़ी कठिनाई हो रही है। मैं केवल ऋषि के कौशल, उनके प्रोजेक्ट्स और काम की उपलब्धता के बारे में बता सकती हूँ। आप उनसे सीधे संपर्क कर सकते हैं: rishibairagi19@gmail.com"
       : prefix + "That's a bit outside what I can help with here — I only cover Rishi's skills, his projects, and freelance work. " + CONTACT_BLOCK;
   }
 
@@ -1105,27 +1189,43 @@
     suggestContainer.innerHTML = '';
     var activeLang = document.documentElement.getAttribute('lang') || 'en';
 
-    var suggestions = activeLang === 'hi' ? [
-      { text: "💻 स्किल्स", query: "आपके मुख्य स्किल्स क्या हैं?" },
-      { text: "🚀 प्रोजेक्ट्स", query: "मुझे अपने प्रोजेक्ट्स के बारे में बताओ" },
-      { text: "💼 काम के लिए", query: "क्या आप काम के लिए उपलब्ध हैं?" },
-      { text: "📞 संपर्क सूत्र", query: "आपसे संपर्क कैसे करें?" }
-    ] : [
-      { text: "💻 Core Skills", query: "What are your core skills?" },
-      { text: "🚀 See Projects", query: "Tell me about your projects" },
-      { text: "💼 Hire Rishi", query: "Are you available for freelance?" },
-      { text: "📞 Contact Info", query: "How do I contact you?" }
-    ];
+    var suggestions = [];
+    if (saraState.step === 'sending') {
+      suggestions = [];
+    } else if (saraState.step !== 'idle') {
+      suggestions = activeLang === 'hi' ? [
+        { text: "❌ रद्द करें", query: "cancel" }
+      ] : [
+        { text: "❌ Cancel Process", query: "cancel" }
+      ];
+    } else {
+      suggestions = activeLang === 'hi' ? [
+        { text: "💻 स्किल्स", query: "आपके मुख्य स्किल्स क्या हैं?" },
+        { text: "🚀 प्रोजेक्ट्स", query: "मुझे अपने प्रोजेक्ट्स के बारे में बताओ" },
+        { text: "💼 काम के लिए", query: "क्या आप काम के लिए उपलब्ध हैं?" },
+        { text: "📞 संपर्क सूत्र", query: "आपसे संपर्क कैसे करें?" }
+      ] : [
+        { text: "💻 Core Skills", query: "What are your core skills?" },
+        { text: "🚀 See Projects", query: "Tell me about your projects" },
+        { text: "💼 Hire Rishi", query: "Are you available for freelance?" },
+        { text: "📞 Contact Info", query: "How do I contact you?" }
+      ];
+    }
 
-    suggestions.forEach(function(s) {
-      var btn = document.createElement('button');
-      btn.className = 'text-[11px] mono px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-cyan hover:border-cyan/50 hover:bg-cyan/5 transition-all cursor-hover';
-      btn.textContent = s.text;
-      btn.addEventListener('click', function() {
-        handleUserMsg(s.query);
+    if (suggestions.length === 0) {
+      suggestContainer.classList.add('hidden');
+    } else {
+      suggestContainer.classList.remove('hidden');
+      suggestions.forEach(function(s) {
+        var btn = document.createElement('button');
+        btn.className = 'text-[11px] mono px-2.5 py-1.5 rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:text-cyan hover:border-cyan/50 hover:bg-cyan/5 transition-all cursor-hover';
+        btn.textContent = s.text;
+        btn.addEventListener('click', function() {
+          handleUserMsg(s.query);
+        });
+        suggestContainer.appendChild(btn);
       });
-      suggestContainer.appendChild(btn);
-    });
+    }
     updateInputPlaceholder();
   }
 
@@ -1133,8 +1233,8 @@
     messages.innerHTML = '';
     var activeLang = document.documentElement.getAttribute('lang') || 'en';
     var welcomeMsg = activeLang === 'hi'
-      ? "नमस्ते! मैं सारा हूँ — ऋषि की असिस्टेंट। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
-      : "Hi, I'm Sara — Rishi's assistant. Ask me about his skills, his projects, or freelance availability.";
+      ? "नमस्ते! मैं ऋषि की पर्सनल असिस्टेंट सारा हूँ। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
+      : "Hi, I'm Rishi Personal Assistant Sara. Ask me about his skills, his projects, or freelance availability.";
     addMsg(welcomeMsg, 'bot');
     renderSuggestions();
   }
@@ -1162,7 +1262,13 @@
     bubble.className = (from === 'user'
       ? 'bg-white text-void'
       : 'bg-white/10 text-ink') + ' rounded-2xl px-4 py-2.5 max-w-[80%] leading-relaxed';
-    bubble.textContent = text;
+    if (from === 'user') {
+      bubble.textContent = text;
+    } else {
+      var htmlText = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      bubble.innerHTML = htmlText;
+    }
     row.appendChild(bubble);
     messages.appendChild(row);
     messages.scrollTop = messages.scrollHeight;
@@ -1174,6 +1280,21 @@
     showTyping();
 
     var activeLang = document.documentElement.getAttribute('lang') || 'en';
+    var msgLower = val.toLowerCase().trim();
+
+    // Reset/Cancel Lead Generation State
+    var cancelWords = ['cancel', 'exit', 'reset', 'stop', 'back', 'no', 'nahi', 'नहीं', 'रद्द', 'बंद'];
+    if (cancelWords.indexOf(msgLower) !== -1 && saraState.step !== 'idle') {
+      setTimeout(function() {
+        hideTyping();
+        saraState.step = 'idle';
+        saraState.email = '';
+        saraState.message = '';
+          renderSuggestions();
+        addMsg(activeLang === 'hi' ? "प्रक्रिया रद्द कर दी गई है। आप फिर से सामान्य प्रश्न पूछ सकते हैं।" : "Process cancelled. You can ask general questions again.", 'bot');
+      }, 750);
+      return;
+    }
 
     // State 1: Collect Email
     if (saraState.step === 'collect_email') {
@@ -1185,6 +1306,7 @@
         } else {
           saraState.email = email;
           saraState.step = 'collect_msg';
+            renderSuggestions();
           addMsg(activeLang === 'hi' ? "बढ़िया! अब आप जो संदेश ऋषि को भेजना चाहते हैं, उसे यहाँ लिखें:" : "Perfect! Now, type the message you would like to send to Rishi:", 'bot');
         }
       }, 750);
@@ -1197,6 +1319,7 @@
         hideTyping();
         saraState.message = val.trim();
         saraState.step = 'sending';
+          renderSuggestions();
         addMsg(activeLang === 'hi' ? "आपका संदेश सुरक्षित रूप से भेजा जा रहा है..." : "Sending your message securely...", 'bot');
         showTyping();
 
@@ -1220,22 +1343,24 @@
             addMsg(activeLang === 'hi' ? "क्षमा करें, संदेश भेजने में कोई त्रुटि हुई। कृपया नीचे दिए गए कांटेक्ट फॉर्म का उपयोग करें।" : "Sorry, there was an issue sending your message. Please use the contact form on the page.", 'bot');
           }
           saraState.step = 'idle';
+            renderSuggestions();
         })
         .catch(function() {
           hideTyping();
           addMsg(activeLang === 'hi' ? "नेटवर्क एरर! कृपया इंटरनेट कनेक्शन की जांच करें।" : "Network error! Please check your internet connection.", 'bot');
           saraState.step = 'idle';
+            renderSuggestions();
         });
       }, 750);
       return;
     }
 
     // State 0: Idle (Normal flow but trigger direct messaging on Yes/हाँ)
-    var msgLower = val.toLowerCase().trim();
     if (msgLower === 'yes' || msgLower === 'हाँ' || msgLower === 'ha' || msgLower === 'y') {
       setTimeout(function() {
         hideTyping();
         saraState.step = 'collect_email';
+          renderSuggestions();
         addMsg(activeLang === 'hi' ? "बढ़िया! पहले अपना ईमेल पता बताएं ताकि ऋषि आपसे संपर्क कर सकें:" : "Awesome! First, please enter your email address so Rishi can reach back to you:", 'bot');
       }, 750);
       return;
@@ -1253,8 +1378,8 @@
     if (!opened){
       var activeLang = document.documentElement.getAttribute('lang') || 'en';
       var welcomeMsg = activeLang === 'hi'
-        ? "नमस्ते! मैं सारा हूँ — ऋषि की असिस्टेंट। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
-        : "Hi, I'm Sara — Rishi's assistant. Ask me about his skills, his projects, or freelance availability.";
+        ? "नमस्ते! मैं ऋषि की पर्सनल असिस्टेंट सारा हूँ। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
+        : "Hi, I'm Rishi Personal Assistant Sara. Ask me about his skills, his projects, or freelance availability.";
       addMsg(welcomeMsg, 'bot');
       renderSuggestions();
       opened = true;
@@ -1317,6 +1442,48 @@
     });
   }
   
+  // Speech Recognition for Hands-Free Interaction
+  var micBtn = document.getElementById('sara-mic');
+  var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (SpeechRecognition && micBtn) {
+    micBtn.classList.remove('hidden');
+    var recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    var isListening = false;
+
+    micBtn.addEventListener('click', function() {
+      var activeLang = document.documentElement.getAttribute('lang') || 'en';
+      recognition.lang = activeLang === 'hi' ? 'hi-IN' : 'en-US';
+      if (isListening) {
+        recognition.stop();
+      } else {
+        try {
+          recognition.start();
+        } catch (e) {
+          // Safe fallback
+        }
+      }
+    });
+
+    recognition.onstart = function() {
+      isListening = true;
+      micBtn.classList.add('text-red-500', 'animate-pulse');
+    };
+    recognition.onresult = function(event) {
+      var transcript = event.results[0][0].transcript;
+      input.value = transcript;
+      form.dispatchEvent(new Event('submit'));
+    };
+    recognition.onerror = function() { 
+      recognition.stop(); 
+    };
+    recognition.onend = function() { 
+      isListening = false;
+      micBtn.classList.remove('text-red-500', 'animate-pulse'); 
+    };
+  }
+
   if (themeBtn) {
     themeBtn.addEventListener('click', function() {
       if (document.documentElement.classList.contains('light-theme')) {
