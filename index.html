@@ -691,8 +691,8 @@
   <div id="sara-panel" data-lenis-prevent class="hidden w-[88vw] max-w-[360px] h-[480px] glass rounded-2xl flex flex-col overflow-hidden scale-95 opacity-0" style="overscroll-behavior: contain;">
     <div class="px-5 py-4 border-b border-white/10 flex items-center justify-between">
       <div class="flex items-center gap-3">
-         <div class="relative w-11 h-11 rounded-full overflow-hidden bg-white/10 flex-shrink-0 border border-white/10 shadow-sm">
-          <img src="https://lh3.googleusercontent.com/d/10u6shbNQbrEfWdrOY3NQ2cL_NpUaycIq" alt="Sara Avatar" class="w-full h-full object-cover object-center" />
+         <div id="sara-avatar-trigger" class="relative w-11 h-11 rounded-full overflow-hidden bg-white/10 flex-shrink-0 border border-white/10 shadow-sm cursor-pointer hover:ring-2 hover:ring-cyan/50 hover:border-cyan active:scale-95 transition-all duration-200 group/avatar">
+          <img src="https://lh3.googleusercontent.com/d/10u6shbNQbrEfWdrOY3NQ2cL_NpUaycIq" alt="Sara Avatar" class="w-full h-full object-cover object-center group-hover/avatar:scale-110 transition-transform duration-300" />
           <span class="absolute bottom-0.5 right-0.5 w-2.5 h-2.5 rounded-full bg-cyan border-2" style="border-color: var(--void);"></span>
         </div>
         <div>
@@ -734,6 +734,19 @@
   </button>
 </div>
 
+<!-- SARA IMAGE ZOOM MODAL -->
+<div id="sara-pic-modal" class="fixed inset-0 z-[100] hidden bg-void/85 backdrop-blur-md flex flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+  <div class="relative max-w-[90vw] max-h-[90vh] flex flex-col items-center gap-4">
+    <div class="w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-2 border-cyan/50 shadow-[0_0_30px_rgba(47,230,208,0.25)] bg-panel">
+      <img src="https://lh3.googleusercontent.com/d/10u6shbNQbrEfWdrOY3NQ2cL_NpUaycIq" alt="Sara Large" class="w-full h-full object-cover object-center" />
+    </div>
+    <button id="sara-pic-close" class="mono text-xs text-slate-400 hover:text-cyan border border-white/10 rounded-full px-4 py-2 bg-white/5 cursor-hover">
+      <span class="lang-en">✕ Close</span>
+      <span class="lang-hi">✕ बंद करें</span>
+    </button>
+  </div>
+</div>
+
 <!-- Libraries: pinned versions, loaded as UMD globals -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -769,6 +782,57 @@
       osc.start();
       osc.stop(audioCtx.currentTime + duration);
     } catch (e) {}
+  }
+
+  // Utility to copy text to clipboard safely with dynamic audio confirmation
+  function copyToClipboard(text) {
+    try {
+      navigator.clipboard.writeText(text).then(function() {
+        playTone(523, 'sine', 0.08);
+        setTimeout(function() { playTone(659, 'sine', 0.08); }, 70);
+        setTimeout(function() { playTone(784, 'sine', 0.12); }, 140); // Ascending success chord!
+      });
+    } catch (err) {
+      var el = document.createElement('textarea');
+      el.value = text;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+    }
+  }
+
+  // Get dynamic local greeting based on time of day
+  function getTimeGreeting() {
+    var hr = new Date().getHours();
+    var activeLang = document.documentElement.getAttribute('lang') || 'en';
+    if (hr < 12) {
+      return activeLang === 'hi' ? "शुभ प्रभात 🌅" : "Good morning 🌅";
+    } else if (hr < 17) {
+      return activeLang === 'hi' ? "शुभ दोपहर ☀️" : "Good afternoon ☀️";
+    } else {
+      return activeLang === 'hi' ? "शुभ संध्या 🌙" : "Good evening 🌙";
+    }
+  }
+
+  // Live Portfolio Tour Guide Scrolling
+  function scrollToSection(selector) {
+    var target = document.querySelector(selector);
+    if (target) {
+      if (lenis) lenis.scrollTo(target, { offset: -20 });
+      else target.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  // Live Site Theme Controller
+  function toggleSystemTheme() {
+    if (document.documentElement.classList.contains('light-theme')) {
+      document.documentElement.classList.remove('light-theme');
+      storage.setItem('sara_theme', 'dark');
+    } else {
+      document.documentElement.classList.add('light-theme');
+      storage.setItem('sara_theme', 'light');
+    }
   }
 
   // Safe localStorage wrapper to prevent SecurityError when running locally (file://) or in iframe
@@ -1009,6 +1073,24 @@
   // Advanced Modular Knowledge Base
   var CONCEPTS = [
     {
+      id: 'experience',
+      keys: ['experience', 'work history', 'job', 'previous', 'anubhav', 'अनुभव', 'नौकरी'],
+      name: { en: "Experience & Projects", hi: "अनुभव और कार्य इतिहास" },
+      text: {
+        en: "Rishi has delivered production-grade projects like full finance trackers (Accountancy App), digital storefront builders (Market Space), and vendor management software.",
+        hi: "ऋषि के पास एडवांस प्रोजेक्ट्स बनाने का बेहतरीन अनुभव है जैसे फाइनेंस ट्रैकर (Accountancy App), ऑनलाइन दुकान बिल्डर (Market Space), और डिलीवरी मैनेजमेंट सॉफ्टवेयर्स।"
+      }
+    },
+    {
+      id: 'education',
+      keys: ['education', 'college', 'degree', 'qualification', 'study', 'padhai', 'पढ़ाई', 'योग्यता'],
+      name: { en: "Education & Background", hi: "शिक्षा और योग्यता" },
+      text: {
+        en: "Rishi is a skilled Software Engineer with hands-on practice in complex web frameworks, systems design, and database administration.",
+        hi: "ऋषि एक कुशल सॉफ्टवेयर इंजीनियर हैं जिन्हें मॉडर्न वेब फ्रेमवर्क्स, सिस्टम्स आर्किटेक्चर और डेटाबेस एडमिनिस्ट्रेशन की गहरी व्यावहारिक समझ है।"
+      }
+    },
+    {
       id: 'python',
       keys: ['python', 'पायथन', 'पाईथन', 'py'],
       name: { en: "Python Development", hi: "पायथन डेवलपमेंट" },
@@ -1134,6 +1216,70 @@
         : "You can ask me about: 'skills', 'projects', specific project names, or 'contact'!";
     }
 
+    // WhatsApp Direct Deep-link Generator (AI Utility Upgrade)
+    var waWords = ['whatsapp', 'wa.me', 'व्हाट्सएप', 'व्हाट्सऐप', 'मैसेज', 'wa chat'];
+    var wantsWA = false;
+    for (var i = 0; i < waWords.length; i++) {
+      if (msg.includes(waWords[i])) { wantsWA = true; break; }
+    }
+    if (wantsWA) {
+      var waText = encodeURIComponent(activeLang === 'hi' ? "नमस्ते ऋषि, मैंने आपका पोर्टफोलियो देखा और मैं आपसे बात करना चाहता हूँ।" : "Hi Rishi, I saw your portfolio and wanted to reach out.");
+      var waLink = "https://wa.me/916263494837?text=" + waText;
+      return activeLang === 'hi'
+        ? "बिल्कुल! आप सीधे ऋषि से व्हाट्सएप पर यहाँ चैट कर सकते हैं: <a href='" + waLink + "' target='_blank' class='text-cyan underline font-medium hover:text-cyan/80'>WhatsApp पर चैट शुरू करें 💬</a>"
+        : "Absolutely! You can text Rishi directly on WhatsApp here: <a href='" + waLink + "' target='_blank' class='text-cyan underline font-medium hover:text-cyan/80'>Start WhatsApp Chat 💬</a>";
+    }
+
+    // Copy to Clipboard Commands (AI Utility Upgrade)
+    if (msg.includes('copy') || msg.includes('कॉपी')) {
+      if (msg.includes('email') || msg.includes('ईमेल')) {
+        copyToClipboard('rishibairagi19@gmail.com');
+        return activeLang === 'hi'
+          ? "ऋषि का ईमेल (<strong>rishibairagi19@gmail.com</strong>) आपके क्लिपबोर्ड पर सुरक्षित रूप से कॉपी हो गया है! 📋"
+          : "Rishi's email (<strong>rishibairagi19@gmail.com</strong>) has been successfully copied to your clipboard! 📋";
+      }
+      if (msg.includes('phone') || msg.includes('number') || msg.includes('फ़ोन') || msg.includes('नंबर') || msg.includes('मोबाइल')) {
+        copyToClipboard('+916263494837');
+        return activeLang === 'hi'
+          ? "ऋषि का फोन नंबर (<strong>+91 62634 94837</strong>) आपके क्लिपबोर्ड पर कॉपी हो गया है! 📋"
+          : "Rishi's phone number (<strong>+91 62634 94837</strong>) has been copied to your clipboard! 📋";
+      }
+    }
+
+    // System Theme Control Command (AI Copilot Upgrade)
+    var themeWords = ['theme', 'dark mode', 'light mode', 'color', 'background', 'थीम', 'डार्क', 'लाइट', 'रंग'];
+    var wantsThemeToggle = false;
+    for (var i = 0; i < themeWords.length; i++) {
+      if (msg.includes(themeWords[i])) { wantsThemeToggle = true; break; }
+    }
+    if (wantsThemeToggle) {
+      setTimeout(toggleSystemTheme, 400);
+      return activeLang === 'hi'
+        ? "लीजिए, मैंने आपके लिए वेबसाइट की थीम बदल दी है! 🌓"
+        : "Done! I've updated the website theme for you. 🌓";
+    }
+
+    // Contextual Follow-up checking (Memory Power Upgrade)
+    var followUpWords = ['link', 'demo', 'website', 'url', 'open', 'go', 'online', 'run', 'play', 'लिंक', 'खोलें', 'चलाओ', 'वेबसाइट', 'डेमो'];
+    var isFollowUp = false;
+    for (var i = 0; i < followUpWords.length; i++) {
+      if (msg.includes(followUpWords[i])) { isFollowUp = true; break; }
+    }
+    if (isFollowUp && saraState.lastConceptId) {
+      var lastC = null;
+      for (var k = 0; k < CONCEPTS.length; k++) {
+        if (CONCEPTS[k].id === saraState.lastConceptId) { lastC = CONCEPTS[k]; break; }
+      }
+      if (lastC && (lastC.id === 'accountancy' || lastC.id === 'marketspace' || lastC.id === 'vendor' || lastC.id === 'diet')) {
+        var anchorMatch = (activeLang === 'hi' ? lastC.text.hi : lastC.text.en).match(/<a[^>]*>.*?<\/a>/);
+        if (anchorMatch) {
+          return activeLang === 'hi'
+            ? "हाँ बिल्कुल! आप <strong>" + lastC.name.hi + "</strong> को यहाँ लाइव देख सकते हैं: " + anchorMatch[0]
+            : "Sure! You can try the live demo of <strong>" + lastC.name.en + "</strong> here: " + anchorMatch[0];
+        }
+      }
+    }
+
     // Smart Name Memory Detection
     var nameMatch = raw.match(/(?:my name is|mera naam|i am|main hoon|मेरा नाम)\s+([a-zA-Z0-9\u0900-\u097F]+)/i);
     if (nameMatch && nameMatch[1]) {
@@ -1184,8 +1330,12 @@
     // 3. Dynamic output generator based on matches
     if (matchedConcepts.length === 1) {
       var c = matchedConcepts[0];
+      saraState.lastConceptId = c.id; // Store current topic in memory
+      setTimeout(renderSuggestions, 50); // Instantly update dynamic chips
       return prefix + (activeLang === 'hi' ? c.text.hi : c.text.en);
     } else if (matchedConcepts.length > 1) {
+      saraState.lastConceptId = matchedConcepts[0].id; // Store first match as context
+      setTimeout(renderSuggestions, 50);
       // Combinatorial synthesis! Stitching matched answers into a unified response
       var response = "";
       if (activeLang === 'hi') {
@@ -1202,6 +1352,26 @@
         response += "Would you like to explore any of these specific areas further?";
       }
       return response;
+    }
+
+    // Semantic Fallback Search Engine (Page Content Scan)
+    var sections = [
+      { id: '#about', keywords: ['about', 'mandsaur', 'madhya pradesh', 'intro', 'background', 'study', 'education', 'कॉलेज', 'पढ़ाई', 'परिचय'] },
+      { id: '#services', keywords: ['service', 'workflow', 'design', 'custom', 'application', 'सॉफ्टवेयर', 'बनाना', 'डिजाइन', 'सेवा'] },
+      { id: '#work', keywords: ['work', 'project', 'github', 'accountancy', 'market', 'vender', 'diet', 'पोर्टफोलियो', 'काम'] },
+      { id: '#contact', keywords: ['contact', 'email', 'phone', 'hire', 'whatsapp', 'संदेश', 'मेल', 'कॉल', 'संपर्क'] }
+    ];
+    
+    for (var i = 0; i < sections.length; i++) {
+      var sec = sections[i];
+      for (var j = 0; j < sec.keywords.length; j++) {
+        if (msg.includes(sec.keywords[j])) {
+          setTimeout(function() { scrollToSection(sec.id); }, 800);
+          return activeLang === 'hi'
+            ? "मुझे इसके बारे में जानकारी पेज पर मिली है! मैं आपको सीधे वहाँ स्क्रॉल करके ले जा रही हूँ... 🚀"
+            : "I scanned the page and found information about that! Let me scroll you right to it... 🚀";
+        }
+      }
     }
 
     // 4. Ultimate Fallback
@@ -1226,7 +1396,8 @@
   var saraState = {
     step: 'idle',
     email: '',
-    message: ''
+    message: '',
+    lastConceptId: '' // NEW: Remembers the last discussed concept
   };
   
   function updateInputPlaceholder() {
@@ -1261,6 +1432,20 @@
         { text: "❌ Cancel Process", query: "cancel" }
       ];
     } else {
+      // Add dynamic demo links to suggestion chips if a project is in active memory
+      var projectsWithLinks = ['accountancy', 'marketspace', 'vendor', 'diet'];
+      if (saraState.lastConceptId && projectsWithLinks.indexOf(saraState.lastConceptId) !== -1) {
+        var projectConcept = null;
+        for (var k = 0; k < CONCEPTS.length; k++) {
+          if (CONCEPTS[k].id === saraState.lastConceptId) { projectConcept = CONCEPTS[k]; break; }
+        }
+        if (projectConcept) {
+          suggestions.push(activeLang === 'hi'
+            ? { text: "🔗 " + projectConcept.name.hi + " खोलें", query: "open live demo link" }
+            : { text: "🔗 Open " + projectConcept.name.en + " Link", query: "open live demo link" }
+          );
+        }
+      }
       suggestions = activeLang === 'hi' ? [
         { text: "💻 स्किल्स", query: "आपके मुख्य स्किल्स क्या हैं?" },
         { text: "🚀 प्रोजेक्ट्स", query: "मुझे अपने प्रोजेक्ट्स के बारे में बताओ" },
@@ -1295,8 +1480,8 @@
     messages.innerHTML = '';
     var activeLang = document.documentElement.getAttribute('lang') || 'en';
     var welcomeMsg = activeLang === 'hi'
-      ? "नमस्ते! मैं ऋषि की पर्सनल असिस्टेंट सारा हूँ। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
-      : "Hi, I'm Rishi Personal Assistant Sara. Ask me about his skills, his projects, or freelance availability.";
+      ? getTimeGreeting() + "! मैं ऋषि की पर्सनल असिस्टेंट सारा हूँ। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
+      : getTimeGreeting() + "! I'm Rishi's Personal Assistant Sara. Ask me about his skills, his projects, or freelance availability.";
     addMsg(welcomeMsg, 'bot');
     renderSuggestions();
   }
@@ -1343,6 +1528,29 @@
     if (!val) return;
     addMsg(val, 'user');
     showTyping();
+
+    // Auto-Language Detection & Website Sync Power
+    var containsHindi = /[\u0900-\u097F]/.test(val);
+    var currentLangAttr = document.documentElement.getAttribute('lang') || 'en';
+    if (containsHindi && currentLangAttr === 'en') {
+      currentLang = 'hi';
+      document.documentElement.setAttribute('lang', 'hi');
+      storage.setItem('sara_lang', 'hi');
+      var langBtnEl = document.getElementById('lang-toggle');
+      if (langBtnEl) langBtnEl.textContent = 'HI';
+      setTimeout(function() {
+        renderSuggestions();
+      }, 10);
+    } else if (!containsHindi && currentLangAttr === 'hi' && /^[a-zA-Z0-9\s?,.!:]+$/.test(val.replace(/[^\w\s]/gi, ''))) {
+      currentLang = 'en';
+      document.documentElement.setAttribute('lang', 'en');
+      storage.setItem('sara_lang', 'en');
+      var langBtnEl = document.getElementById('lang-toggle');
+      if (langBtnEl) langBtnEl.textContent = 'EN';
+      setTimeout(function() {
+        renderSuggestions();
+      }, 10);
+    }
 
     var activeLang = document.documentElement.getAttribute('lang') || 'en';
     var msgLower = val.toLowerCase().trim();
@@ -1433,7 +1641,22 @@
 
     setTimeout(function(){
       hideTyping();
-      addMsg(saraReply(val), 'bot');
+      var reply = saraReply(val);
+      addMsg(reply, 'bot');
+
+      // Co-pilot Tour Guide Scrolling Power
+      setTimeout(function() {
+        var lastId = saraState.lastConceptId;
+        if (lastId) {
+          if (['accountancy', 'marketspace', 'vendor', 'diet', 'experience'].indexOf(lastId) !== -1) {
+            scrollToSection('#work');
+          } else if (['skills', 'about', 'python', 'js', 'education'].indexOf(lastId) !== -1) {
+            scrollToSection('#about');
+          } else if (['freelance', 'contact'].indexOf(lastId) !== -1) {
+            scrollToSection('#contact');
+          }
+        }
+      }, 800);
     }, 750);
   }
 
@@ -1445,8 +1668,8 @@
     if (!opened){
       var activeLang = document.documentElement.getAttribute('lang') || 'en';
       var welcomeMsg = activeLang === 'hi'
-        ? "नमस्ते! मैं ऋषि की पर्सनल असिस्टेंट सारा हूँ। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
-        : "Hi, I'm Rishi Personal Assistant Sara. Ask me about his skills, his projects, or freelance availability.";
+        ? getTimeGreeting() + "! मैं ऋषि की पर्सनल असिस्टेंट सारा हूँ। उनके स्किल्स, प्रोजेक्ट्स या फ्रीलांस उपलब्धता के बारे में पूछें।"
+        : getTimeGreeting() + "! I'm Rishi's Personal Assistant Sara. Ask me about his skills, his projects, or freelance availability.";
       addMsg(welcomeMsg, 'bot');
       renderSuggestions();
       opened = true;
@@ -1484,7 +1707,7 @@
       if (isTranslating) return;
       isTranslating = true;
       // Select all translation containers (parents of .lang-en and .lang-hi)
-      var targets = Array.from(document.querySelectorAll('.lang-en, .lang-hi'))
+          var targets = [].slice.call(document.querySelectorAll('.lang-en, .lang-hi'))
         .map(function(el) { return el.parentElement; })
         .filter(function(el, idx, self) { return el && self.indexOf(el) === idx; });
 
@@ -1569,15 +1792,7 @@
   }
 
   if (themeBtn) {
-    themeBtn.addEventListener('click', function() {
-      if (document.documentElement.classList.contains('light-theme')) {
-        document.documentElement.classList.remove('light-theme');
-        storage.setItem('sara_theme', 'dark');
-      } else {
-        document.documentElement.classList.add('light-theme');
-        storage.setItem('sara_theme', 'light');
-      }
-    });
+    themeBtn.addEventListener('click', toggleSystemTheme);
   }
 
   // Trigger auto-nudge delay if widget is not opened yet
@@ -1588,6 +1803,38 @@
       nudge.addEventListener('click', openPanel);
     }
   }, 4000);
+
+  // Zoom Modal Logic
+  var avatarTrigger = document.getElementById('sara-avatar-trigger');
+  var picModal = document.getElementById('sara-pic-modal');
+  var picClose = document.getElementById('sara-pic-close');
+
+  if (avatarTrigger && picModal) {
+    avatarTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      picModal.classList.remove('hidden');
+      gsap.to(picModal, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+    });
+  }
+
+  function closePicModal() {
+    if (picModal) {
+      gsap.to(picModal, { opacity: 0, duration: 0.2, ease: 'power2.in', onComplete: function() {
+        picModal.classList.add('hidden');
+      }});
+    }
+  }
+
+  if (picClose) {
+    picClose.addEventListener('click', closePicModal);
+  }
+  if (picModal) {
+    picModal.addEventListener('click', function(e) {
+      if (e.target === picModal || e.target.closest('#sara-pic-close')) {
+        closePicModal();
+      }
+    });
+  }
 
   renderSuggestions();
 
